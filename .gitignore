@@ -1,0 +1,22 @@
+# OS
+Thumbs.db
+.DS_Store
+*.swp
+*~
+
+# Node
+node_modules/
+
+# Env
+.env
+.env.*
+
+# OpenCode local
+.opencode/
+
+# IDE
+.vscode/
+.idea/
+
+# Engram
+.atl/
