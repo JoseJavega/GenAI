@@ -101,7 +101,7 @@ Las transcripciones incluyen en frontmatter el campo `person` para vincular con 
 
 ## Pipeline de Procesamiento
 
-Cadena de herramientas OCR: Tesseract + ocrmypdf + ImageMagick + Claude multimodal
+Cadena de herramientas OCR: Tesseract + ocrmypdf + ImageMagick + OpenCode vision
 
 ### Clasificación de Documentos
 
@@ -109,5 +109,5 @@ Cadena de herramientas OCR: Tesseract + ocrmypdf + ImageMagick + Claude multimod
 |----------|-------------|------------|
 | — | Retratos, fotos grupales, edificios | Solo catálogo |
 | — | Certificados, recortes de prensa, diplomas | ocrmypdf (Tesseract) |
-| — | Libros de registro, cartas, notas funerarias | Claude multimodal |
+| — | Libros de registro, cartas, notas funerarias | OpenCode vision |
 | — | Postales (frente/reverse), documentos anotados | Enfoque por capas |

@@ -87,7 +87,7 @@ source: "Archivo/Referencia"
 document_type: "bautismo"    # bautismo | matrimonio | defunción | otro
 person: "Nombre"
 date: "YYYY-MM-DD"
-ocr_method: "manual"         # manual | tesseract | claude
+ocr_method: "manual"         # manual | tesseract | opencode
 ocr_quality: "good"          # good | fair | poor
 ---
 ```

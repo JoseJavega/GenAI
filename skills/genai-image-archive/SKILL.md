@@ -30,7 +30,7 @@ Carga este skill cuando el usuario quiera:
 |----------------|------------|
 | Foto/retrato | Solo catálogo |
 | Texto impreso | ocrmypdf (Tesseract) |
-| Manuscrito | Claude multimodal |
+| Manuscrito | OpenCode vision |
 | Mixto (postal) | Enfoque por capas |
 
 ## Execution Steps
