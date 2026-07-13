@@ -1,9 +1,13 @@
 ---
 type: person
+cr_type: person
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 tags: [genealogy, person]
 name: "NOMBRE COMPLETO"
+sosa: 1
+daboville: "1"
+sosa_daboville: "1"
 born: "YYYY-MM-DD"
 died: "YYYY-MM-DD"
 birth_place: "Lugar"

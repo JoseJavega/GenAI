@@ -21,6 +21,7 @@ Carga este skill cuando el usuario quiera:
 2. Mantener metadatos de la imagen original.
 3. Clasificar: photo_only, printed_text, handwritten, mixed.
 4. Resolución mínima: 300 DPI para OCR.
+5. **OBLIGATORIO**: Leer `vault-conventions.md` ANTES de crear cualquier archivo o directorio en el vault. Seguir estrictamente las convenciones de nombres, frontmatter y estructura de carpetas.
 
 ## Decision Gates
 
@@ -37,7 +38,7 @@ Carga este skill cuando el usuario quiera:
 2. **Clasificar**: Por tipo de contenido.
 3. **Procesar OCR**: Según el tipo.
 4. **Extraer texto**: Transcribir contenido.
-5. **Añadir al vault**: Como transcripción.
+5. **Añadir al vault**: Crear archivo de transcripción siguiendo `vault-conventions.md` (nombre, frontmatter, ubicación).
 6. **Registrar**: En Data_Inventory.md.
 
 ## Output Contract

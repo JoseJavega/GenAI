@@ -20,10 +20,11 @@ Carga este skill cuando el usuario pida cualquier tarea de investigación geneal
 ## Hard Rules
 
 1. NUNCA fabricar personas. Toda adición requiere fuente citada.
-2. NUNCA exponer datos de personas vivas (fechas exactas, direcciones, teléfonos).
+2. **Privacidad**: Si `.genai-config.json` tiene `"public_study": true`, NO exponer datos de personas vivas (usar iniciales, fechas parciales, sin direcciones ni teléfonos). Si `public_study: false`, no aplicar esta restricción.
 3. SIEMPRE usar tiers de evidencia: Strong Signal / Moderate Signal / Speculative.
 4. SIEMPRE registrar resultados negativos en Research_Log.md.
 5. SIEMPRE mantener coherencia entre Family_Tree.md y archivos de personas.
+6. **OBLIGATORIO**: Antes de crear cualquier archivo o directorio en el vault, leer `vault-conventions.md` y seguir estrictamente las convenciones de nombres, frontmatter y estructura de carpetas.
 
 ## Decision Gates
 

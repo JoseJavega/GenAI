@@ -20,7 +20,16 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
    - Si el directorio tiene archivos: **NO hagas nada**. Informa al usuario que el vault ya tiene contenido y que la inicialización no se realizará para evitar sobrescribir datos existentes.
    - Si el directorio está vacío: continúa al paso 4.
 
-4. **Copiar template**: Copia toda la estructura de `vault-template/` al directorio del vault:
+4. **Preguntar sobre publicidad del estudio**: Pregunta al usuario:
+   > ¿Prevees hacer público este estudio genealógico (subirlo a GitHub, blogs, portafolios, etc.)?
+   >
+   > - **Sí, será público**: Se aplicará protección de datos a personas vivas (nombres ocultos, fechas parciales).
+   > - **No, será privado**: No se aplicará protección adicional.
+   
+   Si el usuario elige "público", muestra este recordatorio:
+   > **Recordatorio importante**: Si usas GitHub o similar, asegúrate de que el repositorio esté en **privado**. Los datos genealógicos contienen información personal sensible.
+
+5. **Copiar template**: Copia toda la estructura de `vault-template/` al directorio del vault:
    ```
    vault-template/
    ├── _Index.md
@@ -43,16 +52,20 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
        └── hypothesis.md
    ```
 
-5. **Crear .genai-config.json**: En el vault, crea un archivo de configuración con la ruta de vuelta al proyecto:
+6. **Crear .genai-config.json**: En el vault, crea un archivo de configuración con la ruta de vuelta al proyecto y la configuración de privacidad:
    ```json
    {
      "project_path": "F:\\Proyectos\\ai_packages\\GenAI",
      "vault_initialized": "YYYY-MM-DD",
-     "template_version": "1.0.0"
+     "template_version": "1.0.0",
+     "public_study": false,
+     "privacy_reminder": true
    }
    ```
+   - `public_study`: `true` si el usuario dijo que será público, `false` si será privado.
+   - `privacy_reminder`: `true` siempre (recordatorio sobre repositorios privados).
 
-6. **Reportar**: Informa al usuario que el vault ha sido inicializado correctamente y muestra la estructura creada.
+7. **Reportar**: Informa al usuario que el vault ha sido inicializado correctamente y muestra la estructura creada.
 
 ## IMPORTANTE
 
