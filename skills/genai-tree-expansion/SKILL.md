@@ -50,7 +50,7 @@ Carga este skill cuando el usuario quiera:
 3. **Identificar objetivos**: Para cada nodo hoja (ancestro sin padres listados), anotar nombre, fechas y lugar.
 4. **Estrategia de búsqueda**: Para cada objetivo, buscar en orden:
    - Revisar `sources/transcripciones/` por si ya existe documentación
-   - "Find a Grave" "[NOMBRE]" [AÑO_MUERTE] [LUGAR_SEPULTURA]
+   - Buscar defunción/entierro con `genai-burial-spain` (Registro Civil → parroquial → cementerio municipal)
    - "[NOMBRE]" padres nacidos [RANGO_AÑOS] [LUGAR]
    - site:geni.com "[NOMBRE]" [AÑO_NACIMIENTO]
    - site:wikitree.com "[NOMBRE]"

@@ -32,7 +32,7 @@ Carga este skill cuando el usuario pida cualquier tarea de investigación geneal
 |-----------|--------|
 | Usuario pide expandir árbol | Cargar `genai-tree-expansion` |
 | Usuario pide auditar fuentes | Cargar `genai-cross-reference` |
-| Usuario pide buscar en cementerios | Cargar `genai-findagrave` |
+| Usuario pide buscar en cementerios/defunciones | Cargar `genai-burial-spain` |
 | Usuario pide verificar GEDCOM | Cargar `genai-gedcom` |
 | Usuario pide analizar ADN | Cargar `genai-dna-analysis` |
 | Usuario pide buscar en archivos de imágenes | Cargar `genai-image-archive` |

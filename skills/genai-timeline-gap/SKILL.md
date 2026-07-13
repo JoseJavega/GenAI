@@ -26,7 +26,7 @@ Carga este skill cuando el usuario quiera:
 |-----------|--------|
 | Sin registro de nacimiento | Buscar en parroquia o archivo municipal |
 | Sin registro de matrimonio | Buscar en parroquia del lugar de la esposa |
-| Sin registro de defunción | Buscar en Find a Grave o hemeroteca |
+| Sin registro de defunción | Cargar `genai-burial-spain` (Registro Civil → parroquial → cementerio → hemeroteca) |
 
 ## Execution Steps
 
