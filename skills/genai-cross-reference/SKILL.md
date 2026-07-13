@@ -22,6 +22,7 @@ Carga este skill cuando el usuario quiera:
 3. SIEMPRE reportar la fuente más confiable para cada campo.
 4. NO asumir qué fuente es correcta sin evidencia.
 5. Mantener registro de todas las auditorías en Research_Log.md.
+6. **Ubicaciones**: Fichas en `personas/`, fuentes en `sources/`, transcripciones en `sources/transcripciones/`.
 
 ## Decision Gates
 
@@ -34,13 +35,14 @@ Carga este skill cuando el usuario quiera:
 
 ## Execution Steps
 
-1. **Leer Family_Tree.md**: Extraer todas las personas con datos.
-2. **Cruzar con fuentes**: Para cada persona, verificar datos contra documentos disponibles.
-3. **Identificar discrepancias**: Fechas, nombres, lugares que no coinciden.
-4. **Clasificar**: Por severidad (crítica, menor, cosmética).
-5. **Proponer resoluciones**: Con fuente citada.
-6. **Actualizar vault**: Aplicar cambios aprobados.
-7. **Registrar**: En Research_Log.md y Family_Tree.md (sección Data Discrepancies).
+1. **Leer fichas de personas**: `glob personas/*.md` para extraer todas las personas con datos.
+2. **Leer transcripciones**: `glob sources/transcripciones/*.md` para obtener fuentes documentales.
+3. **Cruzar por persona**: Usar campo `person` del frontmatter de cada transcripción para vincular con la ficha correspondiente.
+4. **Identificar discrepancias**: Fechas, nombres, lugares que no coinciden entre ficha y transcripción.
+5. **Clasificar**: Por severidad (crítica, menor, cosmética).
+6. **Proponer resoluciones**: Con fuente citada.
+7. **Actualizar vault**: Aplicar cambios aprobados en `personas/`.
+8. **Registrar**: En Research_Log.md y Family_Tree.md (sección Data Discrepancies).
 
 ## Output Contract
 

@@ -15,11 +15,20 @@ vault/
 ├── Witness_Network.md           # Red de testigos
 ├── Unresolved_Persons.md        # Personas sin resolver
 ├── Research_Strategy.md         # Estrategia de investigación
-├── [Apellido]/                  # Carpetas por apellido
-│   ├── Nombre_Apellido.md      # Archivo de persona
+├── personas/                    # Fichas de personas (una por archivo)
+│   ├── 001_Nombre.md
+│   ├── 002_Padre.md
+│   ├── 004_Abuelo_Paterno.md
 │   └── ...
-├── [Región]/                    # Carpetas por región
-│   └── ...
+├── sources/                     # Fuentes documentales (centralizado)
+│   ├── certificados/            # Originales por tipo
+│   │   ├── bautismo_1920.pdf
+│   │   └── matrimonio_1945.pdf
+│   ├── fotos/
+│   │   └── familia_1950.jpg
+│   └── transcripciones/         # Transcripciones .md generadas
+│       ├── bautismo_1920.md
+│       └── matrimonio_1945.md
 └── templates/                   # Plantillas
     ├── person.md
     ├── transcription.md
@@ -28,6 +37,15 @@ vault/
     ├── surname.md
     └── hypothesis.md
 ```
+
+### Organización de Fuentes
+
+Las fuentes se almacenan **centralizadas** en `sources/`, no junto a las personas. Esto permite al agente:
+1. Escanear todas las fuentes de un solo vistazo
+2. Identificar transcripciones faltantes
+3. Ejecutar análisis cruzado entre documentos
+
+**Regla**: Cada transcripción enfrontmatter debe incluir el campo `person` para vincularla con la ficha correspondiente.
 
 ## Frontmatter YAML
 
@@ -82,16 +100,17 @@ Cada persona recibe un número compuesto por:
 - **Sosa** (3 dígitos): posición en línea directa ascendente
 - **d'Aboville** (2 dígitos): orden de nacimiento entre hermanos
 
-**Formato**: `SSS-HH_Nombre_Apellido.md`
+**Formato del archivo**: `SSS-HH_Nombre_Apellido.md`
+**Ubicación**: Dentro del directorio `personas/`
 
-| Tipo | Ejemplo | Significado |
-|------|---------|-------------|
-| De cujus | `001_Nombre.md` | Yo (raíz del árbol) |
-| Padre | `002_Padre.md` | Sosa 2 |
-| Madre | `003_Madre.md` | Sosa 3 |
-| Abuelo paterno | `004_Abuelo.md` | Sosa 4 |
-| Tío paterno | `004-01_Tio.md` | Primer hijo de Sosa 4 |
-| Primo paterno | `004-01.02_Primo.md` | Segundo hijo del tío 4-01 |
+| Tipo | Ejemplo | Ubicación completa |
+|------|---------|-------------------|
+| De cujus | `001_Nombre.md` | `personas/001_Nombre.md` |
+| Padre | `002_Padre.md` | `personas/002_Padre.md` |
+| Madre | `003_Madre.md` | `personas/003_Madre.md` |
+| Abuelo paterno | `004_Abuelo.md` | `personas/004_Abuelo.md` |
+| Tío paterno | `004-01_Tio.md` | `personas/004-01_Tio.md` |
+| Primo paterno | `004-01.02_Primo.md` | `personas/004-01.02_Primo.md` |
 
 **Reglas**:
 - Sosa siempre 3 dígitos: `001`, `002`, `004`, `032`, `128`
@@ -99,25 +118,26 @@ Cada persona recibe un número compuesto por:
 - Separador Sosa-d'Aboville: guión (`-`)
 - Separador generaciones d'Aboville: punto (`.`)
 - Sin espacios: usar guiones bajos (`_`) en nombre y apellido
-- Ejemplo completo: `006-01.02_Juan_García.md`
+- Todos los archivos van en `personas/`, no crear subdirectorios por persona
 
 **Ejemplos**:
 ```
-001_Luis_Jávega.md              # De cujus
-002_Padre_de_Luis.md            # Padre (Sosa 2)
-003_Madre_de_Luis.md            # Madre (Sosa 3)
-004_Abuelo_Paterno.md           # Abuelo paterno (Sosa 4)
-004-01_Tío_Paterno.md           # Tío paterno (hermano del abuelo 4)
-004-01.02_Primo_Paterno.md      # Primo paterno (hijo del tío 4-01)
-005_Abuela_Paterna.md           # Abuela paterna (Sosa 5)
-006_Abuelo_Materno.md           # Abuelo materno (Sosa 6)
-006-01_Tío_Materno.md           # Tío materno (hermano del abuelo 6)
-006-01.01_Primo_Materno.md      # Primo materno (hijo del tío 6-01)
+personas/
+├── 001_Luis_Jávega.md              # De cujus
+├── 002_Padre_de_Luis.md            # Padre (Sosa 2)
+├── 003_Madre_de_Luis.md            # Madre (Sosa 3)
+├── 004_Abuelo_Paterno.md           # Abuelo paterno (Sosa 4)
+├── 004-01_Tío_Paterno.md           # Tío paterno (hermano del abuelo 4)
+├── 004-01.02_Primo_Paterno.md      # Primo paterno (hijo del tío 4-01)
+├── 005_Abuela_Paterna.md           # Abuela paterna (Sosa 5)
+├── 006_Abuelo_Materno.md           # Abuelo materno (Sosa 6)
+├── 006-01_Tío_Materno.md           # Tío materno (hermano del abuelo 6)
+└── 006-01.01_Primo_Materno.md      # Primo materno (hijo del tío 6-01)
 ```
 
 ## Wikilinks
 
-Usar wikilinks de Obsidian para conectar archivos. Usar el número Sosa como identificador:
+Usar wikilinks de Obsidian para conectar archivos. Como todos los archivos están en `personas/`, los wikilinks son simples:
 
 ```markdown
 Ver también: [[004_Abuelo_Paterno]], [[006_Abuelo_Materno]]
@@ -125,6 +145,43 @@ Padres: [[002_Padre_de_Luis]] y [[003_Madre_de_Luis]]
 Tíos: [[004-01_Tío_Paterno]], [[006-01_Tío_Materno]]
 Primos: [[004-01.02_Primo_Paterno]], [[006-01.01_Primo_Materno]]
 ```
+
+## Fuentes y Transcripciones
+
+### Estructura de `sources/`
+
+```
+sources/
+├── certificados/              # Originales por tipo de documento
+│   ├── bautismo_1920.pdf
+│   ├── matrimonio_1945.pdf
+│   └── defuncion_1980.pdf
+├── fotos/                     # Imágenes y retratos
+│   ├── familia_1950.jpg
+│   └── boda_1945.jpg
+└── transcripciones/           # Transcripciones .md generadas
+    ├── bautismo_1920.md
+    └── matrimonio_1945.md
+```
+
+### Vinculación persona ↔ fuente
+
+Cada transcripción en `sources/transcripciones/` debe incluir en frontmatter:
+```yaml
+---
+type: transcription
+person: "004_Abuelo_Paterno"    # Nombre exacto del archivo en personas/
+sosa: 4
+source_file: "sources/certificados/bautismo_1920.pdf"
+---
+```
+
+### Escaneo de fuentes (para agentes)
+
+El agente puede escanear fuentes pendientes con:
+1. `glob sources/certificados/*.pdf` → originales
+2. `glob sources/transcripciones/*.md` → transcritos
+3. Resta → faltantes por transcribir
 
 ## Niveles de Evidencia
 

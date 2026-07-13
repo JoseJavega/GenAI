@@ -46,9 +46,10 @@ Carga este skill cuando el usuario quiera:
 
 0. **Cargar configuración**: Leer `.genai-config.json` para determinar si `public_study` es `true` o `false`. Esto afecta las reglas de privacidad (Hard Rule #9).
 1. **Cargar convenciones**: Leer `vault-conventions.md` para entender el formato de nombres de archivos, frontmatter requerido y estructura de carpetas.
-2. **Baseline**: Leer Family_Tree.md completamente. Registrar posture inicial en Research_Log.md.
+2. **Baseline**: Leer Family_Tree.md completamente. Escanear `personas/` para ver quiénes ya existen. Registrar posture inicial en Research_Log.md.
 3. **Identificar objetivos**: Para cada nodo hoja (ancestro sin padres listados), anotar nombre, fechas y lugar.
 4. **Estrategia de búsqueda**: Para cada objetivo, buscar en orden:
+   - Revisar `sources/transcripciones/` por si ya existe documentación
    - "Find a Grave" "[NOMBRE]" [AÑO_MUERTE] [LUGAR_SEPULTURA]
    - "[NOMBRE]" padres nacidos [RANGO_AÑOS] [LUGAR]
    - site:geni.com "[NOMBRE]" [AÑO_NACIMIENTO]
@@ -56,7 +57,7 @@ Carga este skill cuando el usuario quiera:
    - "[NOMBRE]" genealogía [LUGAR] [APELLIDO]
 5. **Evaluar resultados**: Verificar nombre, fechas Y lugar. Todos tres deben alinearse.
 6. **Actualizar vault**: Añadir relaciones `strong` o `moderate` a Family_Tree.md. Añadir relaciones débiles a Open_Questions.md.
-7. **Crear archivos**: Para cada nueva persona, crear archivo siguiendo las convenciones de `vault-conventions.md` (nombre, frontmatter, ubicación). Si `public_study: true`, aplicar protección de datos (Hard Rule #9).
+7. **Crear archivos**: Para cada nueva persona, crear archivo en `personas/` siguiendo las convenciones de `vault-conventions.md` (nombre Sosa-d'Aboville, frontmatter). Si `public_study: true`, aplicar protección de datos (Hard Rule #9).
 8. **Registrar búsqueda**: En Research_Log.md, fecha, consultas, resultados (positivos y negativos).
 9. **Reportar**: Conteo de candidatos fuertes, moderados, especulativos, rechazados.
 

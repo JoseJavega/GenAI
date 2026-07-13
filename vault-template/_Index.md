@@ -57,7 +57,7 @@ tags: [genealogy, family-history]
 
 ### Convención de Nombres (Sosa-d'Aboville)
 
-Cada archivo de persona sigue el formato: `SSS-HH_Nombre_Apellido.md`
+Las fichas de personas se almacenan en `personas/`. Cada archivo sigue el formato: `SSS-HH_Nombre_Apellido.md`
 
 | Sosa | d'Aboville | Nombre | Relación |
 |------|------------|--------|----------|
@@ -74,26 +74,30 @@ Cada archivo de persona sigue el formato: `SSS-HH_Nombre_Apellido.md`
 ### Ejemplo de Estructura
 
 ```
-001_Luis_Jávega.md
+personas/
+├── 001_Luis_Jávega.md
 ├── 002_Padre_de_Luis.md
-│   ├── 004_Abuelo_Paterno.md
-│   │   ├── 008_Bisabuelo_1.md
-│   │   ├── 009_Bisabuela_1.md
-│   │   ├── 004-01_Tío_Paterno.md
-│   │   │   └── 004-01.02_Primo_Paterno.md
-│   │   └── 004-02_Tía_Paterna.md
-│   └── 005_Abuela_Paterna.md
-│       ├── 010_Bisabuelo_2.md
-│       └── 011_Bisabuela_2.md
-└── 003_Madre_de_Luis.md
-    ├── 006_Abuelo_Materno.md
-    │   ├── 012_Bisabuelo_3.md
-    │   ├── 013_Bisabuela_3.md
-    │   └── 006-01_Tío_Materno.md
-    └── 007_Abuela_Materna.md
-        ├── 014_Bisabuelo_4.md
-        └── 015_Bisabuela_4.md
+├── 003_Madre_de_Luis.md
+├── 004_Abuelo_Paterno.md
+├── 004-01_Tío_Paterno.md
+├── 004-01.02_Primo_Paterno.md
+├── 005_Abuela_Paterna.md
+├── 006_Abuelo_Materno.md
+└── 006-01_Tío_Materno.md
 ```
+
+## Fuentes Documentales
+
+### Estructura de `sources/`
+
+```
+sources/
+├── certificados/          # PDFs de certificados
+├── fotos/                 # Imágenes y retratos
+└── transcripciones/       # Transcripciones .md generadas
+```
+
+Las transcripciones incluyen en frontmatter el campo `person` para vincular con la ficha correspondiente en `personas/`.
 
 ## Pipeline de Procesamiento
 
