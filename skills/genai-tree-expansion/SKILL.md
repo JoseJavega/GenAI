@@ -31,6 +31,7 @@ Carga este skill cuando el usuario quiera:
    - Lugares: solo municipio/provincia (sin dirección exacta)
    - NO incluir: teléfonos, emails, direcciones postales
    Si `public_study: false`, no aplicar estas restricciones.
+10. **Numeración d'Aboville**: Al añadir hermanos o hijos de hermanos, SIEMPRE verificar posiciones d'Aboville existentes y usar fechas de nacimiento para ordenar. Nunca asignar .01/.02/.03 secuencialmente sin verificar. Si un sujeto ya tiene d'Aboville, mantener su posición y ordenar los nuevos alrededor de él por fecha de nacimiento.
 
 ## Decision Gates
 
@@ -57,9 +58,19 @@ Carga este skill cuando el usuario quiera:
    - "[NOMBRE]" genealogía [LUGAR] [APELLIDO]
 5. **Evaluar resultados**: Verificar nombre, fechas Y lugar. Todos tres deben alinearse.
 6. **Actualizar vault**: Añadir relaciones `strong` o `moderate` a Family_Tree.md. Añadir relaciones débiles a Open_Questions.md.
-7. **Crear archivos**: Para cada nueva persona, crear archivo en `personas/` siguiendo las convenciones de `vault-conventions.md` (nombre Sosa-d'Aboville, frontmatter). Si `public_study: true`, aplicar protección de datos (Hard Rule #9).
-8. **Registrar búsqueda**: En Research_Log.md, fecha, consultas, resultados (positivos y negativos).
-9. **Reportar**: Conteo de candidatos fuertes, moderados, especulativos, rechazados.
+7. **Calcular d'Aboville**: Para cada nueva persona que es hermano/a o hijo/a de hermano/a:
+   a) **Identificar Sosa del padre/madre común**
+   b) **Escanear `personas/`** para encontrar todos los siblings con ese Sosa (patrón: `SSS-*.md`)
+   c) **Recopilar datos**: nombre, archivo existente, `born` del frontmatter
+   d) **Para cada sibling nuevo sin fecha**: Preguntar al usuario su posición relativa ("¿Es mayor, mediano o menor que [X]?")
+   e) **Ordenar TODOS los siblings** por fecha de nacimiento (los sin fecha se ubican según respuesta del usuario)
+   f) **Asignar d'Aboville**: .01 al mayor, .02 al siguiente, etc.
+   g) **Posición existente**: La persona que ya existía MANTIENE su d'Aboville actual
+   h) **Reasignar si necesario**: Si un nuevo sujeto es mayor que uno existente, reasignar el existente a .02, .03, etc. (renombrar archivo si es necesario)
+   i) **Hijos de hermanos**: Aplicar la misma lógica recursivamente para el nivel siguiente (ej: 004-02.01, 004-02.02)
+8. **Crear archivos**: Para cada nueva persona, crear archivo en `personas/` siguiendo las convenciones de `vault-conventions.md` (nombre Sosa-d'Aboville, frontmatter). Si `public_study: true`, aplicar protección de datos (Hard Rule #9).
+9. **Registrar búsqueda**: En Research_Log.md, fecha, consultas, resultados (positivos y negativos).
+10. **Reportar**: Conteo de candidatos fuertes, moderados, especulativos, rechazados.
 
 ## Output Contract
 
