@@ -29,7 +29,7 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
    Si el usuario elige "público", muestra este recordatorio:
    > **Recordatorio importante**: Si usas GitHub o similar, asegúrate de que el repositorio esté en **privado**. Los datos genealógicos contienen información personal sensible.
 
-5. **Copiar template**: Copia toda la estructura de `vault-template/` al directorio del vault:
+5. **Copiar template**: Copia toda la estructura de `~/.config/opencode/skills/genai/references/vault-template/` al directorio del vault:
    ```
    vault-template/
    ├── _Index.md
@@ -63,18 +63,19 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
 
 6. **Eliminar .gitkeep**: Después de copiar, elimina todos los archivos `.gitkeep` del vault destino. Estos archivos solo existen en el template para que Git preserve los directorios vacíos, pero no deben permanecer en el vault del usuario.
 
-7. **Crear .genai-config.json**: En el vault, crea un archivo de configuración con la ruta de vuelta al proyecto y la configuración de privacidad:
+7. **Crear .genai-config.json**: En el vault, crea un archivo de configuración. Usa la ruta donde encontraste el directorio `vault-template/` como `project_path`. La fecha debe ser la actual:
    ```json
    {
-     "project_path": "F:\\Proyectos\\ai_packages\\GenAI",
-     "vault_initialized": "YYYY-MM-DD",
-     "template_version": "1.0.0",
-     "public_study": false,
+     "project_path": "[RUTA_AL_PROYECTO_GENAI]",
+     "vault_initialized": "[FECHA_ACTUAL]",
+     "template_version": "1.1.0",
+     "public_study": [true/false],
      "privacy_reminder": true
    }
    ```
-   - `public_study`: `true` si el usuario dijo que será público, `false` si será privado.
-   - `privacy_reminder`: `true` siempre (recordatorio sobre repositorios privados).
+   - `project_path`: Ruta absoluta al directorio del proyecto GenAI (donde encontraste el template)
+   - `public_study`: `true` si el usuario dijo que será público, `false` si será privado
+   - `privacy_reminder`: `true` siempre
 
 8. **Reportar**: Informa al usuario que el vault ha sido inicializado correctamente y muestra la estructura creada.
 
