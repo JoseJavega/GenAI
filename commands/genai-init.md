@@ -43,6 +43,15 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
    ├── Witness_Network.md
    ├── Unresolved_Persons.md
    ├── Research_Strategy.md
+   ├── personas/
+   │   └── .gitkeep
+   ├── fuentes/
+   │   ├── certificados/
+   │   │   └── .gitkeep
+   │   ├── fotos/
+   │   │   └── .gitkeep
+   │   └── transcripciones/
+   │       └── .gitkeep
    └── templates/
        ├── person.md
        ├── transcription.md
@@ -52,7 +61,9 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
        └── hypothesis.md
    ```
 
-6. **Crear .genai-config.json**: En el vault, crea un archivo de configuración con la ruta de vuelta al proyecto y la configuración de privacidad:
+6. **Eliminar .gitkeep**: Después de copiar, elimina todos los archivos `.gitkeep` del vault destino. Estos archivos solo existen en el template para que Git preserve los directorios vacíos, pero no deben permanecer en el vault del usuario.
+
+7. **Crear .genai-config.json**: En el vault, crea un archivo de configuración con la ruta de vuelta al proyecto y la configuración de privacidad:
    ```json
    {
      "project_path": "F:\\Proyectos\\ai_packages\\GenAI",
@@ -65,7 +76,7 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
    - `public_study`: `true` si el usuario dijo que será público, `false` si será privado.
    - `privacy_reminder`: `true` siempre (recordatorio sobre repositorios privados).
 
-7. **Reportar**: Informa al usuario que el vault ha sido inicializado correctamente y muestra la estructura creada.
+8. **Reportar**: Informa al usuario que el vault ha sido inicializado correctamente y muestra la estructura creada.
 
 ## IMPORTANTE
 

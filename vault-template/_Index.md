@@ -88,10 +88,10 @@ personas/
 
 ## Fuentes Documentales
 
-### Estructura de `sources/`
+### Estructura de `fuentes/`
 
 ```
-sources/
+fuentes/
 ├── certificados/          # PDFs de certificados
 ├── fotos/                 # Imágenes y retratos
 └── transcripciones/       # Transcripciones .md generadas

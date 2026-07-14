@@ -20,7 +20,7 @@ vault/
 │   ├── 002_Padre.md
 │   ├── 004_Abuelo_Paterno.md
 │   └── ...
-├── sources/                     # Fuentes documentales (centralizado)
+├── fuentes/                     # Fuentes documentales (centralizado)
 │   ├── certificados/            # Originales por tipo
 │   │   ├── bautismo_1920.pdf
 │   │   └── matrimonio_1945.pdf
@@ -40,7 +40,7 @@ vault/
 
 ### Organización de Fuentes
 
-Las fuentes se almacenan **centralizadas** en `sources/`, no junto a las personas. Esto permite al agente:
+Las fuentes se almacenan **centralizadas** en `fuentes/`, no junto a las personas. Esto permite al agente:
 1. Escanear todas las fuentes de un solo vistazo
 2. Identificar transcripciones faltantes
 3. Ejecutar análisis cruzado entre documentos
@@ -148,10 +148,10 @@ Primos: [[004-01.02_Primo_Paterno]], [[006-01.01_Primo_Materno]]
 
 ## Fuentes y Transcripciones
 
-### Estructura de `sources/`
+### Estructura de `fuentes/`
 
 ```
-sources/
+fuentes/
 ├── certificados/              # Originales por tipo de documento
 │   ├── bautismo_1920.pdf
 │   ├── matrimonio_1945.pdf
@@ -166,21 +166,21 @@ sources/
 
 ### Vinculación persona ↔ fuente
 
-Cada transcripción en `sources/transcripciones/` debe incluir en frontmatter:
+Cada transcripción en `fuentes/transcripciones/` debe incluir en frontmatter:
 ```yaml
 ---
 type: transcription
 person: "004_Abuelo_Paterno"    # Nombre exacto del archivo en personas/
 sosa: 4
-source_file: "sources/certificados/bautismo_1920.pdf"
+source_file: "fuentes/certificados/bautismo_1920.pdf"
 ---
 ```
 
 ### Escaneo de fuentes (para agentes)
 
 El agente puede escanear fuentes pendientes con:
-1. `glob sources/certificados/*.pdf` → originales
-2. `glob sources/transcripciones/*.md` → transcritos
+1. `glob fuentes/certificados/*.pdf` → originales
+2. `glob fuentes/transcripciones/*.md` → transcritos
 3. Resta → faltantes por transcribir
 
 ## Niveles de Evidencia

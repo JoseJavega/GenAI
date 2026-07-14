@@ -49,7 +49,7 @@ Carga este skill cuando el usuario quiera:
 2. **Baseline**: Leer Family_Tree.md completamente. Escanear `personas/` para ver quiénes ya existen. Registrar posture inicial en Research_Log.md.
 3. **Identificar objetivos**: Para cada nodo hoja (ancestro sin padres listados), anotar nombre, fechas y lugar.
 4. **Estrategia de búsqueda**: Para cada objetivo, buscar en orden:
-   - Revisar `sources/transcripciones/` por si ya existe documentación
+   - Revisar `fuentes/transcripciones/` por si ya existe documentación
    - Buscar defunción/entierro con `genai-burial-spain` (Registro Civil → parroquial → cementerio municipal)
    - "[NOMBRE]" padres nacidos [RANGO_AÑOS] [LUGAR]
    - site:geni.com "[NOMBRE]" [AÑO_NACIMIENTO]

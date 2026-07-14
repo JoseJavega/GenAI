@@ -22,7 +22,7 @@ Carga este skill cuando el usuario quiera:
 3. Clasificar: photo_only, printed_text, handwritten, mixed.
 4. Resolución mínima: 300 DPI para OCR.
 5. **OBLIGATORIO**: Leer `vault-conventions.md` ANTES de crear cualquier archivo o directorio en el vault. Seguir estrictamente las convenciones de nombres, frontmatter y estructura de carpetas.
-6. **Ubicaciones**: Las fuentes originales van en `sources/certificados/` o `sources/fotos/`. Las transcripciones .md van en `sources/transcripciones/`.
+6. **Ubicaciones**: Las fuentes originales van en `fuentes/certificados/` o `fuentes/fotos/`. Las transcripciones .md van en `fuentes/transcripciones/`.
 
 ## Decision Gates
 
@@ -35,12 +35,12 @@ Carga este skill cuando el usuario quiera:
 
 ## Execution Steps
 
-1. **Escanear fuentes**: `glob sources/certificados/*.pdf` y `glob sources/fotos/*.jpg|*.png` para identificar originales.
-2. **Identificar transcritos**: `glob sources/transcripciones/*.md` para ver cuáles ya tienen transcripción.
+1. **Escanear fuentes**: `glob fuentes/certificados/*.pdf` y `glob fuentes/fotos/*.jpg|*.png` para identificar originales.
+2. **Identificar transcritos**: `glob fuentes/transcripciones/*.md` para ver cuáles ya tienen transcripción.
 3. **Calcular faltantes**: Resta de originales menos transcritos = lista de pendientes.
 4. **Clasificar pendientes**: Por tipo de contenido (texto impreso, manuscrito, foto, mixto).
 5. **Procesar OCR**: Según el tipo, usar método apropiado.
-6. **Crear transcripción**: Guardar en `sources/transcripciones/NOMBRE_ORIGINAL.md` siguiendo `vault-conventions.md`.
+6. **Crear transcripción**: Guardar en `fuentes/transcripciones/NOMBRE_ORIGINAL.md` siguiendo `vault-conventions.md`.
 7. **Vincular persona**: En frontmatter, incluir campo `person` con el nombre exacto del archivo en `personas/`.
 8. **Registrar**: En Data_Inventory.md.
 

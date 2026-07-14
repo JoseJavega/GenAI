@@ -18,5 +18,8 @@ node_modules/
 .vscode/
 .idea/
 
+# Obsidian
+.obsidian/
+
 # Engram
 .atl/
