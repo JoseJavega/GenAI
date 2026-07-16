@@ -1,220 +1,230 @@
-# Patrones de Entidades en Documentos Genealógicos
+# Validación de Entidades Extraídas
 
-## Tipos de Documentos
+Esta guía se usa para **validar** los datos extraídos por los prompts estructurados (`ocr-prompts/`). NO se usa para extraer — la extracción la hace el modelo directamente en YAML.
 
-### Registro Civil
+## 1. Validación de Coherencia Interna
 
-| Campo | Patrones comunes | Notas |
-|-------|------------------|-------|
-| Nombre completo | `NOMBRE APELLIDO APELLIDO` | Buscar en campos "Nombre", "Hijo de", "Casado con" |
-| Fecha de nacimiento | `DD de MES de AAAA` | "el día quince de marzo de mil novecientos veinte" |
-| Lugar de nacimiento | `Lugar, Municipio/Barrio` | "en la ciudad de Madrid, barrio de Malasaña" |
-| Padres | `NOMBRE APELLIDO y NOMBRE APELLIDO` | "hijo legítimo de José García y María López" |
-| Abuelos paternos | `NOMBRE y NOMBRE` | "nieto de Antonio García y Carmen Ruiz" |
-| Testigos | `NOMBRE, ocupación` | "testigo: Juan Martínez, jornalero" |
-| Oficiante | `CARGO NOMBRE` | "Antonio Ruiz, Juez Municipal" |
-| Fecha de matrimonio | `DD de MES de AAAA` | En actas de matrimonio |
-| Cónyuge | `NOMBRE APELLIDO` | "con María López González" |
-| Hijos | Lista de nombres | "prole: José, María, Antonio" |
+### Reglas temporales (bautismo)
 
-### Registro Parroquial (Bautismo)
+| Regla | Descripción | Si se viola |
+|-------|-------------|-------------|
+| Bautismo ≤ nacimiento + 30 días | El bautismo suele ocurrir días después del nacimiento | Marcar `baptism_date` como `~` |
+| Bautismo ≥ nacimiento | No se puede bautizar antes de nacer | Error grave, pedir revisión manual |
+| Edad del padre ≥ 14 años | Edad mínima razonable para paternidad (históricamente) | Marcar datos como `~` |
+| Edad de la madre ≥ 12 años | Edad mínima razonable para maternidad histórica | Marcar datos como `~` |
 
-| Campo | Patrones comunes | Notas |
-|-------|------------------|-------|
-| Nombre del bautizado | `NOMBRE APELLIDO` | "a José, hijo de..." |
-| Fecha de bautismo | `DD de MES de AAAA` | Generalmente mismo día o día siguiente al nacimiento |
-| Fecha de nacimiento | implícita | "nacido el día anterior" |
-| Padres | `NOMBRE y NOMBRE` | "hijo legítimo de José García y María López" |
-| Abuelos | `NOMBRE y NOMBRE` | "nieto de Antonio García y Carmen Ruiz" |
-| Padrinos | `NOMBRE APELLIDO` | "padrino: Juan Martínez" |
-| Sacerdote | `Pbro. NOMBRE` | "Pbro. Antonio Ruiz" |
+### Reglas temporales (matrimonio)
 
-### Registro Parroquial (Matrimonio)
+| Regla | Descripción | Si se viola |
+|-------|-------------|-------------|
+| Novio ≥ 14 años (histórico) | Edad mínima para matrimonio canónico histórico | Marcar como `~` |
+| Novia ≥ 12 años (histórico) | Edad mínima histórica | Marcar como `~` |
+| Padres del novio/novia deben ser ≥ novio+14 | Los padres deben ser al menos 14 años mayores | Marcar datos parentales como `~` |
 
-| Campo | Patrones comunes | Notas |
-|-------|------------------|-------|
-| Novios | `NOMBRE y NOMBRE` | "Juan García con María López" |
-| Fecha de matrimonio | `DD de MES de AAAA` | |
-| Padres del novio | `NOMBRE y NOMBRE` | "hijo legítimo de José García y María López" |
-| Padres de la novia | `NOMBRE y NOMBRE` | "hija legítima de Antonio López y Carmen Ruiz" |
-| Testigos | `NOMBRE, ocupación` | "testigos: Pedro Sánchez, labrador" |
-| Párroco | `Pbro. NOMBRE` | |
+### Reglas temporales (defunción)
 
-### Registro Parroquial (Defunción)
+| Regla | Descripción | Si se viola |
+|-------|-------------|-------------|
+| Defunción ≥ nacimiento | No se puede morir antes de nacer | Error grave |
+| Defunción ≥ matrimonio (si casado) | La muerte ocurre después del matrimonio | Marcar fecha como `~` |
+| Edad en años ≈ año_muerte − año_nacimiento | Coherencia entre edad declarada y fechas | Si difiere > 5 años, marcar |
 
-| Campo | Patrones comunes | Notas |
-|-------|------------------|-------|
-| Nombre del difunto | `NOMBRE APELLIDO` | "falleció José García" |
-| Fecha de defunción | `DD de MES de AAAA` | |
-| Fecha de sepultura | `DD de MES de AAAA` | "sepultado el día siguiente" |
-| Edad | `NOMBRE` años | "a los sesenta y cinco años de edad" |
-| Estado civil | `NOMBRE` | "casado con María López" |
-| Cónyuge | `NOMBRE APELLIDO` | "viudo de Carmen Ruiz" |
-| Padres | `NOMBRE y NOMBRE` | "hijo de Antonio García y Ana Martínez" |
-| Causa de muerte | Descripción | "de accidente cerebrovascular" |
+### Reglas de nombres
 
-## Patrones de Fechas
+| Regla | Descripción |
+|-------|-------------|
+| El apellido del hijo coincide con el del padre | Al menos el primer apellido del hijo = apellido del padre |
+| El apellido de la madre aparece como segundo apellido en el hijo | Patrón español: hijo lleva apellido1 del padre + apellido1 de la madre |
+| Los abuelos paternos comparten apellido con el padre | El abuelo paterno tiene el mismo apellido que el padre |
+| Los abuelos maternos comparten apellido con la madre | La abuela materna tiene el apellido de la madre |
 
-### Formato textual
+## 2. Validación Contra el Vault
 
-```regex
-# Día en número o texto
-(\d{1,2}|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|...)
-# Mes
-de (enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)
-# Año en número o texto
-de (\d{4}|mil.*)
-```
+### Coincidencia de personas
 
-### Ejemplos comunes
-
-| Texto OCR | Fecha normalizada |
-|-----------|-------------------|
-| `el día quince de marzo de mil novecientos veinte` | 1920-03-15 |
-| `15 de Marzo de 1920` | 1920-03-15 |
-| `a 15 del mes de Marzo del año 1920` | 1920-03-15 |
-| `en 15 de Marzo de 1920` | 1920-03-15 |
-| `el 15/03/1920` | 1920-03-15 |
-
-## Patrones de Nombres
-
-### Nombres propios comunes ( España s. XIX-XX)
-
-| Masculinos | Femeninos |
-|------------|-----------|
-| José, Juan, Antonio, Manuel, Francisco, Pedro, Luis, Miguel, José María, Juan José | María, Ana, Carmen, Francisca, Teresa, Joaquina, Manuela, Petra, Pilar, Dolores |
-| Antonio José, José Antonio, Juan Antonio | María José, María del Carmen, María de los Dolores |
-
-### Apellidos comunes
-
-| Apellido | Variantes frecuentes |
-|----------|---------------------|
-| García | García, Garçia |
-| López | López, Lobes |
-| Martínez | Martínez, Martinez |
-| Rodríguez | Rodríguez, Rodriguez |
-| Fernández | Fernández, Fernandez |
-| Sánchez | Sánchez, Sanchez |
-| Pérez | Pérez, Perez |
-| González | González, Gonzalez |
-
-### Abreviaturas frecuentes
-
-| Abreviatura | Significado |
-|-------------|-------------|
-| `D.` / `D.ª` | Don / Doña |
-| `Pbro.` | Presbítero (sacerdote) |
-| `Ilmo.` / `Ilma.` | Ilustrísimo / Ilustrísima |
-| `Dr.` / `Dra.` | Doctor / Doctora |
-| `Sr.` / `Sra.` | Señor / Señora |
-| `Sto.` / `Sta.` | Santo / Santa |
-
-## Patrones de Relaciones
-
-### Parentesco
-
-```regex
-# Padres
-hijo(s)? (legítimo(s)?|natural(es)?|ilegítimo(s)?) de ([^y]+) y ([^.]+)
-# Matrimonio
-casad[oa]s? con ([^.]+)
-# Viudo/a
-viud[oa] de ([^.]+)
-# Huérfano
-huérfano de ([^.]+)
-```
-
-### Filiación completa
-
-```regex
-# Patrón estándar
-(NOMBRE) (APELLIDO), hijo(s)? (legítimo(s)?) de (NOMBRE1) (APELLIDO1) y (NOMBRE2) (APELLIDO2)
-# Con abuelos
-nieto de (NOMBRE1) (APELLIDO1) y (NOMBRE2) (APELLIDO2)
-```
-
-## Patrones de Lugares
-
-### Estructura típica
+Cuando extraes un nombre, búscalo en el vault existente:
 
 ```
-[Ciudad/Villa], [Barrio/Parroquia]
-[Barrio/Parrioquia], [Ciudad/Villa]
-[Parroquia], [Municipio], [Provincia]
+1. Buscar en personas/*.md por nombre exacto o parcial
+2. Si existe: comparar fechas con las extraídas
+   - ¿Coinciden? → validado, usar datos del vault como fuente cruzada
+   - ¿Difieren? → marcar como discrepancia, no sobrescribir sin verificación
+3. Si no existe: crear nueva persona
 ```
 
-### Ejemplos
+### Coincidencia de fuentes
 
-| Texto | Lugar normalizado |
-|-------|-------------------|
-| `en la ciudad de Madrid` | Madrid |
-| `en la parroquia de San Pedro, Granada` | San Pedro, Granada |
-| `en el barrio de San Millán, Burgos` | San Millán, Burgos |
-| `en este Registro Civil de Madrid` | Madrid |
+```
+1. Buscar en fuentes/transcripciones/ por nombre de archivo similar
+2. Si ya existe transcripción para ese documento → saltar, ya procesado
+3. Si no existe → continuar con guardado
+```
 
-## Patrones de Números
+### Matriz de verificación cruzada
 
-### Números en texto → dígitos
+| Situación | Acción |
+|-----------|--------|
+| Persona existe + fechas coinciden | Usar `evidence_tier: strong`, añadir fuente a `sources` |
+| Persona existe + fechas NO coinciden | NO modificar. Registrar en Research_Log.md como discrepancia |
+| Persona existe + fecha nueva (campo que faltaba) | Añadir campo con fuente, mantener `evidence_tier` existente |
+| Persona NO existe | Crear nueva ficha con `evidence_tier` según calidad OCR |
 
-| Texto | Número |
+## 3. Evaluación de Confianza por Campo
+
+Cada campo en el YAML extraído lleva un `confidence` (0.0-1.0). Usa esta tabla para determinar la acción:
+
+| Confidence | Acción en persona | Acción en transcripción |
+|------------|-------------------|------------------------|
+| ≥ 0.90 | Añadir a persona sin revisión | Marcar como `good` |
+| 0.70 - 0.89 | Añadir con nota "pendiente de verificar" | Marcar como `fair` |
+| 0.50 - 0.69 | NO añadir a persona, incluir en notas de transcripción | Marcar como `fair` |
+| < 0.50 | NO añadir ni a persona ni a notas — pedir re-escaneo | Marcar como `poor` |
+
+### Confianza combinada del documento
+
+```
+ocr_confidence_final = min(
+    ocr_confidence,
+    avg(field_confidence for each extracted field)
+)
+```
+
+Si `ocr_confidence_final < 0.60` → todo el documento requiere revisión manual.
+
+## 4. Validación de Formato de Fechas
+
+### Formatos aceptados en YAML extraído
+
+Las fechas DEBEN llegar en formato `YYYY-MM-DD` desde la extracción. Verificar:
+
+| Formato esperado | Ejemplo | ¿Válido? |
+|------------------|---------|----------|
+| `YYYY-MM-DD` | `1920-03-15` | ✅ |
+| `YYYY-??-??` | `1920-??-??` | ✅ (año conocido, día/mes no) |
+| `~YYYY-MM-DD` | `~1920-03-15` | ✅ (incierto, marca `~`) |
+| `YYYY-MM-DD` con año < 1000 | `0950-03-15` | ❌ (muy antiguo para registro) |
+| Texto sin convertir | `quince de marzo` | ❌ (debió convertirse en prompt) |
+
+### Conversión de números en texto a dígitos (referencia)
+
+| Texto | Dígito |
 |-------|--------|
-| `uno` | 1 |
-| `dos` | 2 |
-| `diez` | 10 |
-| `doce` | 12 |
-| `quince` | 15 |
-| `veinte` | 20 |
-| `treinta` | 30 |
-| `cuarenta` | 40 |
-| `cincuenta` | 50 |
-| `sesenta` | 60 |
-| `setenta` | 70 |
-| `ochenta` | 80 |
-| `noventa` | 90 |
-| `cien` | 100 |
-| `mil` | 1000 |
+| uno | 1 |
+| dos | 2 |
+| tres | 3 |
+| cuatro | 4 |
+| cinco | 5 |
+| seis | 6 |
+| siete | 7 |
+| ocho | 8 |
+| nueve | 9 |
+| diez | 10 |
+| once | 11 |
+| doce | 12 |
+| trece | 13 |
+| catorce | 14 |
+| quince | 15 |
+| veinte | 20 |
+| treinta | 30 |
+| cuarenta | 40 |
+| cincuenta | 50 |
+| sesenta | 60 |
+| setenta | 70 |
+| ochenta | 80 |
+| noventa | 90 |
+| cien / ciento | 100 |
+| mil | 1000 |
 
-### Años en texto
+## 5. Referencia de Abreviaturas y Títulos
 
-| Texto | Año |
-|-------|-----|
-| `mil novecientos veinte` | 1920 |
-| `mil ochocientos noventa y cinco` | 1895 |
-| `mil setecientos ochenta` | 1780 |
-| `dos mil` | 2000 |
+| Abreviatura | Significado | Contexto |
+|-------------|-------------|----------|
+| `D.` | Don | Tratamiento caballero |
+| `D.ª` / `Da.` | Doña | Tratamiento señora |
+| `Pbro.` | Presbítero | Sacerdote oficiante |
+| `Ilmo.` / `Ilma.` | Ilustrísimo/a | Autoridad eclesiástica |
+| `Excmo.` / `Excma.` | Excelentísimo/a | Alta autoridad |
+| `Dr.` / `Dra.` | Doctor/a | Título académico |
+| `Sr.` / `Sra.` | Señor/a | Tratamiento general |
+| `Sto.` / `Sta.` | Santo/a | En nombres de iglesias/parroquias |
+| `V.` | Véase | Referencia a otro folio |
+| `L.` | Libro | En signaturas |
+| `F.` / `Fol.` | Folio | Número de página del libro |
+| `Vto.` | Visto | Aprobado |
 
-## Extracción de Entidades Clave
+## 6. Nombres Propios Comunes (s. XIX-XX España)
 
-### Checklist por tipo de documento
+Para validación de extracción — si el modelo devuelve un nombre poco común y con baja confianza, puede ser un error de OCR.
 
-#### Bautismo
-- [ ] Nombre del bautizado
-- [ ] Fecha de bautismo
-- [ ] Fecha de nacimiento (si aparece)
-- [ ] Lugar de nacimiento/bautismo
-- [ ] Nombre del padre
-- [ ] Nombre de la madre
-- [ ] Nombre de los abuelos (si aparecen)
-- [ ] Nombre del/los padrino(s)
-- [ ] Nombre del sacerdote
+| Masculinos comunes | Femeninos comunes |
+|--------------------|-------------------|
+| José, Juan, Antonio, Manuel, Francisco | María, Ana, Carmen, Francisca |
+| Pedro, Luis, Miguel, Rafael, Diego | Teresa, Joaquina, Manuela, Petra |
+| Santiago, Andrés, Tomás, Pablo, Ángel | Pilar, Dolores, Rosario, Concepción |
+| Vicente, Ramón, Enrique, Joaquín | Josefa, Isabel, Catalina, Lucía |
 
-#### Matrimonio
-- [ ] Nombre del novio
-- [ ] Nombre de la novia
-- [ ] Fecha de matrimonio
-- [ ] Lugar de matrimonio
-- [ ] Padres del novio
-- [ ] Padres de la novia
-- [ ] Testigos
-- [ ] Nombre del párroco
+### Variantes ortográficas frecuentes
 
-#### Defunción
-- [ ] Nombre del difunto
-- [ ] Fecha de defunción
-- [ ] Fecha de sepultura
-- [ ] Lugar de defunción
-- [ ] Edad al fallecer
-- [ ] Estado civil
-- [ ] Nombre del cónyuge (si casado)
-- [ ] Causa de muerte
-- [ ] Padres (si aparecen)
+| Apellido | Variantes documentadas |
+|----------|----------------------|
+| García | García, Garçia, Garsía |
+| López | López, Lopes, Lobes |
+| Martínez | Martínez, Martinez, Martines |
+| Rodríguez | Rodríguez, Rodriguez, Rodrigues |
+| Fernández | Fernández, Fernandez, Fernandes |
+| Sánchez | Sánchez, Sanchez, Sanches |
+| Pérez | Pérez, Perez, Peres |
+| González | González, Gonzalez, Gonçales |
+
+## 7. Flujo de Validación (resumen)
+
+```
+YAML extraído del prompt
+       │
+       ▼
+┌─────────────────────────────┐
+│ 1. Validar coherencia       │ ← Reglas temporales y de nombres
+│    interna del documento    │
+└──────────┬──────────────────┘
+           │ ¿Pasa?
+           │
+      ┌────┴────┐
+      │  SÍ     │  NO
+      │         ▼
+      │    ┌──────────────────┐
+      │    │ Ajustar campos   │
+      │    │ con baja conf    │
+      │    └────────┬─────────┘
+      │             │
+      ▼             ▼
+┌─────────────────────────────┐
+│ 2. Validar contra vault     │ ← Coincidencia de personas/fuentes
+└──────────┬──────────────────┘
+           │
+      ┌────┴────┐
+      │ Nueva   │ Existente
+      │ persona │     │
+      │    │    │     ▼
+      │    ▼    │ ┌────────────────┐
+      │ ┌─────┐ │ │ ¿Coinciden     │
+      │ │Crear│ │ │ fechas?        │
+      │ └─────┘ │ └──┬────────┬────┘
+      │    │    │  SÍ│        │NO
+      │    │    │    ▼        ▼
+      │    │    │ ┌────────┐ ┌─────────────┐
+      │    │    │ │Añadir  │ │Registrar    │
+      │    │    │ │fuente  │ │discrepancia │
+      │    │    │ └────────┘ └─────────────┘
+      │    │    │
+      ▼    ▼    ▼
+┌─────────────────────────────┐
+│ 3. Evaluar confianza final  │ ← evidence_tier
+│    y asignar evidence_tier  │
+└──────────┬──────────────────┘
+           │
+           ▼
+┌─────────────────────────────┐
+│ 4. Guardar transcripción    │
+│    y actualizar persona     │
+└─────────────────────────────┘
+```
