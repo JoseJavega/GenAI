@@ -2,7 +2,7 @@
   "$schema": "https://opencode.ai/config.json",
   "agent": {
     "genai": {
-      "description": "Agente de investigación genealógica familiar. Usa IA para expandir árboles, auditar fuentes, analizar ADN y gestionar un vault de Obsidian.",
+      "description": "Orquestador de investigación genealógica. Delega en sub-agentes especializados.",
       "mode": "primary",
       "model": "opencode/big-pickle",
       "prompt": "{file:./agents/genai.md}",
@@ -15,6 +15,45 @@
         "websearch": true,
         "delegate": true,
         "task": true
+      }
+    },
+    "genai-images": {
+      "description": "Procesa imágenes de documentos genealógicos: clasifica, extrae datos estructurados y transcribe.",
+      "prompt": "{file:./agents/genai-images.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true
+      }
+    },
+    "genai-expansion": {
+      "description": "Expande el árbol genealógico: busca ancestros, añade ramas familiares con fuentes verificadas.",
+      "prompt": "{file:./agents/genai-expansion.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "webfetch": true,
+        "websearch": true
+      }
+    },
+    "genai-investigation": {
+      "description": "Investiga en web: historia local, preguntas abiertas, personas sin nombre, huecos temporales.",
+      "prompt": "{file:./agents/genai-investigation.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "webfetch": true,
+        "websearch": true
+      }
+    },
+    "genai-analysis": {
+      "description": "Analiza y audita datos existentes: referencias cruzadas, fuentes, ADN, estructura del vault.",
+      "prompt": "{file:./agents/genai-analysis.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true
       }
     }
   },
