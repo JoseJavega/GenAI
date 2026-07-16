@@ -19,7 +19,7 @@ Carga este skill cuando el usuario quiera:
 
 ## Hard Rules
 
-1. Usar el método OCR apropiado según el tipo de imagen.
+1. **NO scripts, NO external tools**: Prohibido usar Python, Tesseract, ocrmypdf, ImageMagick o cualquier herramienta externa. El OCR se hace EXCLUSIVAMENTE con OpenCode vision.
 2. Mantener metadatos de la imagen original.
 3. Clasificar: photo_only, printed_text, handwritten, mixed.
 4. Resolución mínima: 300 DPI para OCR.

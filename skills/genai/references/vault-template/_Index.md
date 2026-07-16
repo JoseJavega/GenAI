@@ -101,13 +101,13 @@ Las transcripciones incluyen en frontmatter el campo `person` para vincular con 
 
 ## Pipeline de Procesamiento
 
-Cadena de herramientas OCR: Tesseract + ocrmypdf + ImageMagick + OpenCode vision
+Cadena de herramientas OCR: OpenCode vision (único método)
 
 ### Clasificación de Documentos
 
 | Cantidad | Descripción | Método OCR |
 |----------|-------------|------------|
 | — | Retratos, fotos grupales, edificios | Solo catálogo |
-| — | Certificados, recortes de prensa, diplomas | ocrmypdf (Tesseract) |
+| — | Certificados, recortes de prensa, diplomas | OpenCode vision |
 | — | Libros de registro, cartas, notas funerarias | OpenCode vision |
 | — | Postales (frente/reverse), documentos anotados | Enfoque por capas |

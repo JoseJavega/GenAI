@@ -1,16 +1,35 @@
-# GenAI - Agente de Investigación Genealógica
+# GenAI — Orquestador de Investigación Genealógica
 
-Agente especializado en investigación genealógica familiar para OpenCode. Inspirado en [autoresearch-genealogy](https://github.com/mattprusak/autoresearch-genealogy), adaptado al español y recursos españoles.
+GenAI es un agente para OpenCode especializado en investigación genealógica familiar. No ejecuta trabajo directamente: actúa como **orquestador** que recibe tu petición, la delega en el sub-agente especializado adecuado y sintetiza los resultados.
 
-## Características
+Inspirado en [autoresearch-genealogy](https://github.com/mattprusak/autoresearch-genealogy), adaptado al español y a los recursos genealógicos españoles.
 
-- **13 skills especializados** para diferentes tareas de genealogía
-- **Vault template** para Obsidian con estructura completa
-- **Recursos españoles**: PARES, Hemeroteca BNE, FamilySearch, Archivos Provinciales
-- **Términología en español**: Glosario completo de términos genealógicos
-- **Privacidad**: Protección de datos de personas vivas
+## Arquitectura
 
-## Instalación
+```
+Usuario
+  │
+  ▼
+┌──────────────────────────────────────────┐
+│  GenAI (orquestador)                     │
+│  - Clasifica tu petición                 │
+│  - Delega al sub-agente especializado    │
+│  - Sintetiza resultados                  │
+│  - Nunca ejecuta trabajo inline          │
+└────┬──────┬──────┬──────────┬───────────┘
+     │      │      │          │
+     ▼      ▼      ▼          ▼
+  expansion  images  investigation  analysis
+```
+
+| Sub-agente | Función | Skills asociadas |
+|---|---|---|
+| `genai-expansion` | Expandir árbol, buscar ancestros, cementerios, inmigración | tree-expansion, findagrave, burial-spain, immigration, colonial, gedcom |
+| `genai-images` | OCR, transcripción de documentos, extracción de entidades | image-archive |
+| `genai-investigation` | Investigación web, historia local, preguntas abiertas | local-history, open-questions, unresolved |
+| `genai-analysis` | Auditoría de fuentes, referencias cruzadas, ADN, huecos temporales | cross-reference, source-citation, dna-analysis, timeline-gap |
+
+## Quick Start
 
 ### 1. Clonar el repositorio
 
@@ -27,17 +46,13 @@ Añade a tu `opencode.json` (global o de proyecto):
 {
   "agent": {
     "genai": {
-      "description": "Agente de investigación genealógica familiar",
+      "description": "Orquestador de investigación genealógica",
       "mode": "primary",
       "model": "opencode/big-pickle",
       "prompt": "{file:./agents/genai.md}",
       "tools": {
-        "bash": true,
-        "edit": true,
-        "read": true,
-        "write": true,
-        "webfetch": true,
-        "websearch": true
+        "delegate": true,
+        "task": true
       }
     }
   },
@@ -47,7 +62,9 @@ Añade a tu `opencode.json` (global o de proyecto):
 }
 ```
 
-### 3. Inicializar tu vault
+El orquestador solo necesita `delegate` y `task`. Los sub-agentes se encargan del resto.
+
+### 3. Inicializar un vault
 
 Desde OpenCode, ejecuta:
 
@@ -55,89 +72,73 @@ Desde OpenCode, ejecuta:
 /genai-init
 ```
 
-Esto creará la estructura del vault en la ruta que indiques (solo si está vacío).
-
-## Uso
-
-### Seleccionar el agente
-
-En OpenCode, selecciona el agente `genai` en el selector de agentes.
-
-### Tareas disponibles
-
-| Comando | Descripción |
-|---------|-------------|
-| "Expandir rama de los García" | Carga skill de expansión de árbol |
-| "Auditar fuentes del árbol" | Carga skill de referencias cruzadas |
-| "Buscar en Find a Grave" | Carga skill de cementerios |
-| "Verificar GEDCOM" | Carga skill de verificación GEDCOM |
-| "Analizar ADN" | Carga skill de análisis genético |
-
-### Comando de inicialización
-
-```
-/genai-init [ruta-del-vault]
-```
-
-Inicializa un vault nuevo con el template.
+Crea la estructura del vault de Obsidian en la ruta que indiques (solo si está vacío).
 
 ## Estructura del Proyecto
 
 ```
 GenAI/
-├── opencode.json                 # Configuración del agente
+├── opencode.json                   # Configuración del agente
 ├── agents/
-│   └── genai.md                  # System prompt del agente
+│   ├── genai.md                    # System prompt del orquestador
+│   ├── genai-expansion.md          # Sub-agente de expansión de árbol
+│   ├── genai-images.md             # Sub-agente de procesamiento de imágenes
+│   ├── genai-investigation.md      # Sub-agente de investigación web
+│   └── genai-analysis.md           # Sub-agente de análisis y auditoría
 ├── commands/
-│   └── genai-init.md             # Comando de inicialización
+│   └── genai-init.md               # Comando de inicialización de vault
 ├── skills/
-│   ├── genai/                    # Skill orquestador
-│   │   ├── SKILL.md
+│   ├── genai/                      # Skill base (referencias compartidas)
 │   │   └── references/
-│   ├── genai-tree-expansion/     # Prompt 01
-│   ├── genai-cross-reference/    # Prompt 02
-│   ├── genai-findagrave/         # Prompt 03
-│   ├── genai-gedcom/             # Prompt 04
-│   ├── genai-source-citation/    # Prompt 05
-│   ├── genai-unresolved/         # Prompt 06
-│   ├── genai-timeline-gap/       # Prompt 07
-│   ├── genai-open-questions/     # Prompt 08
-│   ├── genai-local-history/      # Prompt 09
-│   ├── genai-colonial/           # Prompt 10
-│   ├── genai-immigration/        # Prompt 11
-│   ├── genai-dna-analysis/       # Prompt 12
-│   └── genai-image-archive/      # Prompt 13 - Imágenes, OCR y entidades
-└── vault-template/               # Template para Obsidian
+│   ├── genai-tree-expansion/       # Expansión de árbol genealógico
+│   ├── genai-cross-reference/      # Auditoría de referencias cruzadas
+│   ├── genai-findagrave/           # Búsqueda en Find a Grave
+│   ├── genai-gedcom/               # Verificación de archivos GEDCOM
+│   ├── genai-source-citation/      # Verificación de citas de fuentes
+│   ├── genai-unresolved/           # Identificación de personas sin nombre
+│   ├── genai-timeline-gap/         # Detección de huecos temporales
+│   ├── genai-open-questions/       # Resolución de preguntas abiertas
+│   ├── genai-local-history/        # Extracción de historia local
+│   ├── genai-colonial/             # Búsqueda de registros coloniales
+│   ├── genai-immigration/          # Búsqueda de registros de inmigración
+│   ├── genai-dna-analysis/         # Análisis de ADN por cromosoma
+│   └── genai-image-archive/        # Procesamiento de imágenes y OCR
+└── vault-template/                 # Template para vault de Obsidian
     ├── _Index.md
     ├── Family_Tree.md
-    ├── Research_Log.md
     └── ...
 ```
 
-## Skills (Prompts)
+## Skills
 
-| # | Skill | Descripción |
-|---|-------|-------------|
-| 01 | genai-tree-expansion | Expandir árbol con fuentes verificadas |
-| 02 | genai-cross-reference | Auditar discrepancias en datos |
-| 03 | genai-findagrave | Buscar en cementerios |
-| 04 | genai-gedcom | Verificar archivos GEDCOM |
-| 05 | genai-source-citation | Verificar completitud de fuentes |
-| 06 | genai-unresolved | Resolver personas sin nombre |
-| 07 | genai-timeline-gap | Encontrar huecos temporales |
-| 08 | genai-open-questions | Resolver preguntas abiertas |
-| 09 | genai-local-history | Extraer de historia local |
-| 10 | genai-colonial | Buscar registros coloniales |
-| 11 | genai-immigration | Buscar registros de inmigración |
-| 12 | genai-dna-analysis | Analizar ADN por cromosoma |
-| 13 | genai-image-archive | Procesar imágenes, OCR y extraer entidades genealógicas |
+Cada skill es un conjunto de instrucciones especializadas que los sub-agentes cargan según la tarea.
+
+| Skill | Descripción | Usada por |
+|---|---|---|
+| `genai-tree-expansion` | Expandir árbol con fuentes verificadas | expansion |
+| `genai-cross-reference` | Auditar discrepancias entre árbol y fuentes | analysis |
+| `genai-findagrave` | Localizar memoriales en Find a Grave | expansion |
+| `genai-gedcom` | Verificar completitud de archivos GEDCOM | expansion |
+| `genai-source-citation` | Verificar que cada persona cite fuentes | analysis |
+| `genai-unresolved` | Identificar y resolver personas sin nombre | investigation |
+| `genai-timeline-gap` | Encontrar huecos donde debería haber registros | analysis |
+| `genai-open-questions` | Atacar sistemáticamente preguntas abiertas | investigation |
+| `genai-local-history` | Extraer datos de libros de historia local | investigation |
+| `genai-colonial` | Buscar registros coloniales americanos | expansion |
+| `genai-immigration` | Localizar manifiestos y naturalizaciones | expansion |
+| `genai-dna-analysis` | Analizar segmentos genéticos por cromosoma | analysis |
+| `genai-image-archive` | Procesar imágenes, OCR y extraer entidades | images |
 
 ## Recursos Españoles
+
+Recursos clave para investigación genealógica en España:
 
 - **PARES**: https://pares.culturaydeporte.gob.es
 - **Hemeroteca BNE**: https://hemerotecadigital.bne.es
 - **FamilySearch**: https://www.familysearch.org
 - **HISPAGEN**: http://www.hispagen.es
+
+Referencia completa en `skills/genai/references/spanish-genealogy-resources.md`.
 
 ## Licencia
 
@@ -145,4 +146,4 @@ MIT
 
 ## Créditos
 
-Basado en [autoresearch-genealogy](https://github.com/mattprusak/autoresearch-genealogy) de Matt Prusak. Adaptado para español y recursos españoles.
+Basado en [autoresearch-genealogy](https://github.com/mattprusak/autoresearch-genealogy) de Matt Prusak. Adaptado al español y a los recursos genealógicos españoles.
