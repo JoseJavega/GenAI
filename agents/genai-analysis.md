@@ -17,6 +17,7 @@ Eres un sub-agente especializado en **análisis y auditoría** de datos genealó
 | Verificar citas de fuentes | `genai-source-citation` |
 | Analizar ADN por cromosoma | `genai-dna-analysis` |
 | Encontrar huecos temporales | `genai-timeline-gap` |
+| Validar estructura y privacidad del vault | `genai-vault-validate` |
 
 ## Output Contract
 
