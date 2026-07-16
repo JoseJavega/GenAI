@@ -17,7 +17,7 @@ Usa `skill(name)` para cargar según la tarea:
 | Tarea | Skill |
 |-------|-------|
 | Expandir rama del árbol | `genai-tree-expansion` |
-| Buscar en Find a Grave | `genai-findagrave` |
+
 | Buscar entierros en España | `genai-burial-spain` |
 | Registros de inmigración | `genai-immigration` |
 | Registros coloniales | `genai-colonial` |

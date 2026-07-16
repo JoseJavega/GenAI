@@ -35,7 +35,7 @@ Carga este skill cuando el usuario quiera:
 2. **Leer documentos fuente**: Buscar más contexto sobre cada persona.
 3. **Buscar conexiones**: Testigos, vecinos, familiares.
 4. **Cruzar información**: Con otros documentos del vault.
-5. **Actualizar estado**: Marcar como resuelta o继续 investigación.
+5. **Actualizar estado**: Marcar como resuelta o continuar investigación.
 
 ## Output Contract
 

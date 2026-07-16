@@ -4,34 +4,27 @@ description: "Explorar archivos de imágenes, leer entradas, recortar evidencia 
 license: MIT
 metadata:
   author: JoseJavega
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 ## Activation Contract
 
-Carga este skill cuando el usuario quiera:
-- Procesar imágenes de documentos genealógicos
-- Realizar OCR en fotos antiguas
-- Clasificar imágenes por tipo
-- Extraer información de imágenes
-- **Extraer entidades de certificados** (bautismo, matrimonio, defunción)
-- **Crear transcripciones en el vault**
+Carga este skill cuando quieras procesar imágenes de documentos genealógicos: OCR, clasificación, extracción de entidades y transcripción para el vault.
 
 ## Hard Rules
 
-1. **NO scripts, NO external tools**: Prohibido usar Python, Tesseract, ocrmypdf, ImageMagick o cualquier herramienta externa. El OCR se hace EXCLUSIVAMENTE con OpenCode vision.
-2. Mantener metadatos de la imagen original.
-3. Clasificar: photo_only, printed_text, handwritten, mixed.
-4. Resolución mínima: 300 DPI para OCR.
-5. **OBLIGATORIO**: Leer `vault-conventions.md` ANTES de crear cualquier archivo o directorio en el vault. Seguir estrictamente las convenciones de nombres, frontmatter y estructura de carpetas.
-6. **Ubicaciones**: Las fuentes originales van en `fuentes/certificados/` o `fuentes/fotos/`. Las transcripciones .md van en `fuentes/transcripciones/`.
-7. **Extraer entidades**: Siempre extraer personas, fechas, lugares y relaciones del texto OCR.
-8. **Vincular persona**: Cada transcripción DEBE incluir campo `person` en frontmatter.
+1. **NO scripts, NO external tools**: Solo OpenCode vision para OCR. Nada de Python, Tesseract, ocrmypdf, ImageMagick.
+2. Clasificar imágenes: `photo_only`, `printed_text`, `handwritten`, `mixed`.
+3. Resolución mínima: 300 DPI para OCR.
+4. **OBLIGATORIO**: Leer `vault-conventions.md` antes de crear archivos. Seguir convenciones de nombres, frontmatter y estructura.
+5. **Ubicaciones**: Originales en `fuentes/certificados/` o `fuentes/fotos/`. Transcripciones en `fuentes/transcripciones/`.
+6. Toda transcripción DEBE incluir campo `person` en frontmatter.
+7. Extraer siempre: personas, fechas, lugares y relaciones.
 
 ## Decision Gates
 
-| Tipo de Imagen | Método OCR |
-|----------------|------------|
+| Tipo Imagen | Método |
+|---|---|
 | Foto/retrato | Solo catálogo |
 | Texto impreso | OpenCode vision |
 | Manuscrito | OpenCode vision |
@@ -39,47 +32,10 @@ Carga este skill cuando el usuario quiera:
 
 ## Execution Steps
 
-### Fase 1: Catálogo de Imágenes
-
-1. **Escanear fuentes**: `glob fuentes/certificados/*.pdf` y `glob fuentes/fotos/*.jpg|*.png` para identificar originales.
-2. **Identificar transcritos**: `glob fuentes/transcripciones/*.md` para ver cuáles ya tienen transcripción.
-3. **Calcular faltantes**: Resta de originales menos transcritos = lista de pendientes.
-4. **Clasificar pendientes**: Por tipo de contenido (texto impreso, manuscrito, foto, mixto).
-
-### Fase 2: OCR con OpenCode Vision
-
-5. **Preparar imagen**: Asegurar resolución ≥300 DPI. Si es PDF, extraer página relevante.
-6. **Ejecutar OCR**: Usar la herramienta de visión de OpenCode para analizar la imagen.
-7. **Prompt de OCR**: Pedir al modelo que extraiga TODO el texto visible, manteniendo el formato original.
-
-**Prompt sugerido para OCR:**
-```
-Extrae todo el texto de esta imagen de documento genealógico.
-Mantén el formato original incluyendo:
-- Fechas completas
-- Nombres y apellidos
-- Lugares
-- Relaciones familiares (hijo de, casado con, etc.)
-- Cargos y testigos
-Responde SOLO con el texto extraído, sin comentarios adicionales.
-```
-
-### Fase 3: Extracción de Entidades
-
-8. **Identificar tipo de documento**: Bautismo, matrimonio, defunción, otro.
-9. **Extraer entidades** según patrones en `references/entity-patterns.md`:
-   - **Persona principal** (nombre, fecha nacimiento, lugar)
-   - **Padres** (nombre padre, nombre madre)
-   - **Abuelos** (si aparecen)
-   - **Otros** (padrinos, testigos, oficiante)
-10. **Normalizar fechas**: Convertir texto a formato YYYY-MM-DD.
-11. **Validar consistencia**: Verificar que las entidades tienen sentido (ej: padre mayor que hijo).
-
-### Fase 4: Guardado en Vault
-
-12. **Crear transcripción** en `fuentes/transcripciones/` siguiendo formato en `references/vault-output-format.md`.
-13. **Actualizar persona** en `personas/` si existe, o crear nueva si es ancestor desconocido.
-14. **Registrar** en Research_Log.md.
+1. **Catalogar**: `glob fuentes/certificados/*.pdf` + `glob fuentes/fotos/*.jpg|*.png`. Identificar transcritos vía `glob fuentes/transcripciones/*.md`. Calcular pendientes por resta.
+2. **OCR**: Preparar imagen (≥300 DPI). Usar OpenCode vision con el prompt en `references/ocr-prompt.md`.
+3. **Extraer entidades**: Identificar tipo documento (bautismo/matrimonio/defunción). Extraer persona principal, padres, abuelos, testigos según `references/entity-patterns.md`. Normalizar fechas a YYYY-MM-DD. Validar consistencia.
+4. **Guardar**: Transcripción en `fuentes/transcripciones/` (formato en `references/vault-output-format.md`). Actualizar o crear persona en `personas/`. Registrar en Research_Log.md.
 
 ## Output Contract
 
@@ -91,18 +47,16 @@ Responde SOLO con el texto extraído, sin comentarios adicionales.
 |--------|------|--------|-----------|--------|
 
 ### Resumen
-- Total: [n]
-- Procesadas: [n]
-- Pendientes: [n]
-- Entidades extraídas: [n]
+- Total: [n] | Procesadas: [n] | Pendientes: [n] | Entidades: [n]
 
 ### Entidades Encontradas
-| Persona | Tipo Documento | Fecha | Lugar |
-|---------|---------------|-------|-------|
+| Persona | Documento | Fecha | Lugar |
+|---------|-----------|-------|-------|
 ```
 
 ## References
 
+- `references/ocr-prompt.md` — Prompt sugerido para OpenCode vision
 - `references/entity-patterns.md` — Patrones de extracción para documentos españoles
 - `references/vault-output-format.md` — Formato de salida al vault
 - `../genai/references/vault-conventions.md` — Convenciones generales del vault

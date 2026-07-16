@@ -92,7 +92,7 @@ GenAI/
 │   │   └── references/
 │   ├── genai-tree-expansion/       # Expansión de árbol genealógico
 │   ├── genai-cross-reference/      # Auditoría de referencias cruzadas
-│   ├── genai-findagrave/           # Búsqueda en Find a Grave
+
 │   ├── genai-gedcom/               # Verificación de archivos GEDCOM
 │   ├── genai-source-citation/      # Verificación de citas de fuentes
 │   ├── genai-unresolved/           # Identificación de personas sin nombre
@@ -117,7 +117,6 @@ Cada skill es un conjunto de instrucciones especializadas que los sub-agentes ca
 |---|---|---|
 | `genai-tree-expansion` | Expandir árbol con fuentes verificadas | expansion |
 | `genai-cross-reference` | Auditar discrepancias entre árbol y fuentes | analysis |
-| `genai-findagrave` | Localizar memoriales en Find a Grave | expansion |
 | `genai-gedcom` | Verificar completitud de archivos GEDCOM | expansion |
 | `genai-source-citation` | Verificar que cada persona cite fuentes | analysis |
 | `genai-unresolved` | Identificar y resolver personas sin nombre | investigation |

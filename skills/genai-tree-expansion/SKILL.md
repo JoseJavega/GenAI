@@ -4,73 +4,43 @@ description: "Expandir árbol genealógico con fuentes verificadas para ancestro
 license: MIT
 metadata:
   author: JoseJavega
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 ## Activation Contract
 
-Carga este skill cuando el usuario quiera:
-- Expandir el árbol genealógico
-- Buscar ancestros de una persona
-- Añadir nuevas ramas familiares
-- Descubrir padres, abuelos o bisabuelos
+Carga este skill cuando quieras expandir el árbol, buscar ancestros, añadir ramas familiares o descubrir padres/abuelos.
 
 ## Hard Rules
 
-1. Cada persona añadida DEBE citar al menos una fuente.
-2. NUNCA confiar en árboles de usuarios (Geni, Ancestry hints) sin corroboración.
-3. NO añadir relaciones confirmadas solo de árboles de usuarios → tratarlas como leads.
-4. NO modificar fechas o nombres existentes → eso es trabajo de cross-reference audit.
-5. Marcar adiciones no verificadas como `(speculative)` o `evidence_tier: speculative`.
-6. Preferir añadir a `Open_Questions.md` sobre añadir un ancestro débil a `Family_Tree.md`.
-7. NO buscar personas vivas en web. Tratar al punto de partida, hermanos, padres y cualquier persona sin fecha de muerte como vivos.
-8. **OBLIGATORIO**: Leer `vault-conventions.md` ANTES de crear cualquier archivo o directorio. Seguir estrictamente las convenciones de nombres, frontmatter y estructura de carpetas definidas ahí.
-9. **Privacidad (si `public_study: true`)**: Si `.genai-config.json` tiene `"public_study": true`, aplicar protección de datos a personas vivas:
-   - Nombres: usar iniciales o " [Vivo] "
-   - Fechas: año completo o " ca. XXXX " (sin día/mes exacto)
-   - Lugares: solo municipio/provincia (sin dirección exacta)
-   - NO incluir: teléfonos, emails, direcciones postales
-   Si `public_study: false`, no aplicar estas restricciones.
-10. **Numeración d'Aboville**: Al añadir hermanos o hijos de hermanos, SIEMPRE verificar posiciones d'Aboville existentes y usar fechas de nacimiento para ordenar. Nunca asignar .01/.02/.03 secuencialmente sin verificar. Si un sujeto ya tiene d'Aboville, mantener su posición y ordenar los nuevos alrededor de él por fecha de nacimiento.
+1. Toda persona añadida requiere fuente. Árboles de usuarios (Geni, Ancestry) no valen sin corroboración.
+2. NO modificar fechas/nombres existentes (eso es cross-reference). Sin evidencia → `Open_Questions.md`.
+3. NO buscar vivos en web. Tratar como vivo a quien no tenga fecha de muerte.
+4. **Privacidad condicional**: Leer `.genai-config.json`. Si `public_study: true`, aplicar `references/privacy-rules.md`.
+5. **d'Aboville**: Seguir `references/daboville-algorithm.md` al añadir siblings.
+6. **OBLIGATORIO**: Leer `vault-conventions.md` antes de crear archivos.
 
 ## Decision Gates
 
-| Situación | Acción |
-|-----------|--------|
-| Fuente primaria (certificado, registro) | Añadir a Family_Tree.md con tier `strong` |
-| Fuente secundaria con corroboración | Añadir a Family_Tree.md con tier `moderate` |
-| Fuente secundaria sin corroboración | Añadir a Open_Questions.md |
-| Sin fuentes | NO añadir, registrar en Research_Log.md |
-| Persona posiblemente viva | Marcar como `Living`, sin fechas exactas. Si `public_study: true`, aplicar protección de datos completa (Hard Rule #9) |
+| Situación | Acción | evidence_tier |
+|-----------|--------|---------------|
+| Fuente primaria (certificado, registro) | Añadir a Family_Tree.md | `strong` |
+| Fuente secundaria con corroboración | Añadir a Family_Tree.md | `moderate` |
+| Fuente secundaria sin corroboración | Añadir a Open_Questions.md | — |
+| Sin fuentes | NO añadir, registrar en Research_Log.md | — |
+| Persona posiblemente viva | Marcar como `Living`, aplicar privacidad si corresponde | — |
 
 ## Execution Steps
 
-0. **Cargar configuración**: Leer `.genai-config.json` para determinar si `public_study` es `true` o `false`. Esto afecta las reglas de privacidad (Hard Rule #9).
-1. **Cargar convenciones**: Leer `vault-conventions.md` para entender el formato de nombres de archivos, frontmatter requerido y estructura de carpetas.
-2. **Baseline**: Leer Family_Tree.md completamente. Escanear `personas/` para ver quiénes ya existen. Registrar posture inicial en Research_Log.md.
-3. **Identificar objetivos**: Para cada nodo hoja (ancestro sin padres listados), anotar nombre, fechas y lugar.
-4. **Estrategia de búsqueda**: Para cada objetivo, buscar en orden:
-   - Revisar `fuentes/transcripciones/` por si ya existe documentación
-   - Buscar defunción/entierro con `genai-burial-spain` (Registro Civil → parroquial → cementerio municipal)
-   - "[NOMBRE]" padres nacidos [RANGO_AÑOS] [LUGAR]
-   - site:geni.com "[NOMBRE]" [AÑO_NACIMIENTO]
-   - site:wikitree.com "[NOMBRE]"
-   - "[NOMBRE]" genealogía [LUGAR] [APELLIDO]
-5. **Evaluar resultados**: Verificar nombre, fechas Y lugar. Todos tres deben alinearse.
-6. **Actualizar vault**: Añadir relaciones `strong` o `moderate` a Family_Tree.md. Añadir relaciones débiles a Open_Questions.md.
-7. **Calcular d'Aboville**: Para cada nueva persona que es hermano/a o hijo/a de hermano/a:
-   a) **Identificar Sosa del padre/madre común**
-   b) **Escanear `personas/`** para encontrar todos los siblings con ese Sosa (patrón: `SSS-*.md`)
-   c) **Recopilar datos**: nombre, archivo existente, `born` del frontmatter
-   d) **Para cada sibling nuevo sin fecha**: Preguntar al usuario su posición relativa ("¿Es mayor, mediano o menor que [X]?")
-   e) **Ordenar TODOS los siblings** por fecha de nacimiento (los sin fecha se ubican según respuesta del usuario)
-   f) **Asignar d'Aboville**: .01 al mayor, .02 al siguiente, etc.
-   g) **Posición existente**: La persona que ya existía MANTIENE su d'Aboville actual
-   h) **Reasignar si necesario**: Si un nuevo sujeto es mayor que uno existente, reasignar el existente a .02, .03, etc. (renombrar archivo si es necesario)
-   i) **Hijos de hermanos**: Aplicar la misma lógica recursivamente para el nivel siguiente (ej: 004-02.01, 004-02.02)
-8. **Crear archivos**: Para cada nueva persona, crear archivo en `personas/` siguiendo las convenciones de `vault-conventions.md` (nombre Sosa-d'Aboville, frontmatter). Si `public_study: true`, aplicar protección de datos (Hard Rule #9).
-9. **Registrar búsqueda**: En Research_Log.md, fecha, consultas, resultados (positivos y negativos).
-10. **Reportar**: Conteo de candidatos fuertes, moderados, especulativos, rechazados.
+0. **Config**: Leer `.genai-config.json` + `vault-conventions.md`.
+1. **Baseline**: Leer Family_Tree.md y `personas/`. Registrar estado en Research_Log.md.
+2. **Objetivos**: Nodos hoja sin padres listados.
+3. **Buscar**: Transcripciones existentes → registro civil → parroquial → hemerotecas. Priorizar `genai-burial-spain` para defunciones.
+4. **Evaluar**: Nombre, fechas y lugar deben alinearse.
+5. **Actualizar**: Strong/moderate a Family_Tree.md. Débiles a Open_Questions.md.
+6. **d'Aboville**: Seguir `references/daboville-algorithm.md`.
+7. **Crear archivos**: En `personas/` con privacidad si corresponde.
+8. **Registrar**: Research_Log.md con fecha, consultas y resultados.
 
 ## Output Contract
 
@@ -82,14 +52,14 @@ Carga este skill cuando el usuario quiera:
 |--------|----------|------|--------|--------|
 
 ### Resumen
-- Strong: [n]
-- Moderate: [n]
-- Speculative: [n]
-- Rechazados: [n]
+- Strong: [n] | Moderate: [n] | Speculative: [n] | Rechazados: [n]
 
-### Archivos Modificados
-- [archivos]
-
-### Pendiente
-- [acciones]
+### Archivos Modificados / Pendiente
+- [archivos y acciones restantes]
 ```
+
+## References
+
+- `references/daboville-algorithm.md` — Algoritmo de numeración d'Aboville
+- `references/privacy-rules.md` — Reglas de privacidad condicionales
+- `../genai/references/vault-conventions.md` — Convenciones del vault
