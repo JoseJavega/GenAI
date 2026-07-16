@@ -17,8 +17,19 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
    - Si existe: continúa al paso 3.
 
 3. **Comprobar si está vacío**: 
-   - Si el directorio tiene archivos: **NO hagas nada**. Informa al usuario que el vault ya tiene contenido y que la inicialización no se realizará para evitar sobrescribir datos existentes.
-   - Si el directorio está vacío: continúa al paso 4.
+   - Ejecuta `ls -A [RUTA]` para ver todos los archivos (visibles y ocultos)
+   - Clasifica los archivos encontrados en dos categorías:
+     - **Archivos ocultos** (empiezan con `.`): `.gitkeep`, `.nul`, `.gitignore`, `.git/`, etc. → No interfieren con la inicialización
+     - **Archivos del proyecto** (de una inicialización anterior): `_Index.md`, `Family_Tree.md`, `personas/`, `fuentes/`, `templates/`, `.genai-config.json`, etc. → Serán sobrescritos
+   - Informa al usuario con este formato:
+     ```
+     Encontré X archivos ocultos: [lista de archivos ocultos]
+     Encontré Y archivos del proyecto: [lista de archivos del proyecto]
+     ```
+   - **Si hay archivos del proyecto**: Pregunta: "¿Quieres continuar? Los archivos del proyecto serán sobrescritos."
+     - Si el usuario dice **SÍ**: continúa al paso 4
+     - Si el usuario dice **NO**: aborta la inicialización
+   - **Si solo hay archivos ocultos o está vacío**: continúa al paso 4
 
 4. **Preguntar sobre publicidad del estudio**: Pregunta al usuario:
    > ¿Prevees hacer público este estudio genealógico (subirlo a GitHub, blogs, portafolios, etc.)?
@@ -81,6 +92,7 @@ Eres un agente de inicialización. Tu tarea es configurar un vault nuevo de Obsi
 
 ## IMPORTANTE
 
-- **NUNCA** copies el template si el directorio tiene archivos.
-- **SIEMPRE** verifica que el directorio esté completamente vacío antes de proceder.
+- **SIEMPRE** verifica si hay archivos (visibles u ocultos) antes de proceder.
+- Si hay archivos, **PIDE CONFIRMACIÓN** al usuario antes de continuar.
+- Solo procede si el directorio está **completamente vacío** o el usuario confirma explícitamente.
 - Si hay dudas, **NO** ejecutes la copia. Pide confirmación al usuario.
