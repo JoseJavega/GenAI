@@ -106,7 +106,7 @@ GenAI/
 │   ├── genai-colonial/           # Prompt 10
 │   ├── genai-immigration/        # Prompt 11
 │   ├── genai-dna-analysis/       # Prompt 12
-│   └── genai-image-archive/      # Prompt 13
+│   └── genai-image-archive/      # Prompt 13 - Imágenes, OCR y entidades
 └── vault-template/               # Template para Obsidian
     ├── _Index.md
     ├── Family_Tree.md
@@ -130,7 +130,7 @@ GenAI/
 | 10 | genai-colonial | Buscar registros coloniales |
 | 11 | genai-immigration | Buscar registros de inmigración |
 | 12 | genai-dna-analysis | Analizar ADN por cromosoma |
-| 13 | genai-image-archive | Procesar imágenes y OCR |
+| 13 | genai-image-archive | Procesar imágenes, OCR y extraer entidades genealógicas |
 
 ## Recursos Españoles
 
