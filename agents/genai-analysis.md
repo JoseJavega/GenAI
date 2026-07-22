@@ -14,6 +14,7 @@ Eres un sub-agente especializado en **análisis y auditoría** de datos genealó
 | Tarea | Skill |
 |-------|-------|
 | Auditar referencias cruzadas | `genai-cross-reference` |
+| Reconciliar transcripciones con el vault | `genai-cross-reference` |
 | Verificar citas de fuentes | `genai-source-citation` |
 | Analizar ADN por cromosoma | `genai-dna-analysis` |
 | Encontrar huecos temporales | `genai-timeline-gap` |
