@@ -18,9 +18,9 @@ Carga este skill cuando quieras procesar imágenes de documentos genealógicos: 
 3. Resolución mínima: 300 DPI para OCR. Para PDFs, extraer cada página como imagen independiente y procesar una a una.
 4. **OBLIGATORIO**: Leer `vault-conventions.md` antes de crear archivos. Seguir convenciones de nombres, frontmatter y estructura.
 5. **Ubicaciones**: Originales en `fuentes/certificados/` o `fuentes/fotos/`. Transcripciones en `fuentes/transcripciones/`.
-6. Toda transcripción DEBE incluir campo `person` en frontmatter.
+6. Toda transcripción DEBE incluir `source_file` en frontmatter apuntando al original.
 7. **Extracción estructurada**: NO extraer texto plano y luego parsear con regex. Usar los prompts tipo-específicos (`references/ocr-prompts/{tipo}.md`) para obtener YAML estructurado directamente desde la imagen.
-8. **Validación obligatoria**: Todo YAML extraído debe pasar por `references/entity-patterns.md` (validación de coherencia + cruce con vault) antes de guardarse.
+8. **Validación obligatoria**: Todo YAML extraído debe pasar por `references/entity-patterns.md` (validación de coherencia interna) antes de guardarse. NO se cruza con vault — eso corresponde a `genai-cross-reference`.
 
 ## Decision Gates
 
@@ -58,13 +58,12 @@ Para PDFs multi-página: extraer cada página como imagen independiente y proces
    
    Cada prompt devuelve YAML estructurado directamente desde la imagen. NO se extrae texto plano para parsear después.
 
-4. **Validar contra vault**: Aplicar `references/entity-patterns.md`:
+4. **Validar coherencia interna**: Aplicar `references/entity-patterns.md`:
    - Validar coherencia interna: fechas, edades, relaciones familiares
-   - Validar contra vault existente: ¿la persona ya existe? ¿coinciden fechas?
    - Evaluar confianza por campo y confianza combinada
    - Si `ocr_confidence_final < 0.60` → marcar para revisión manual, no guardar automáticamente
 
-5. **Guardar**: Transcripción en `fuentes/transcripciones/` (formato en `references/vault-output-format.md`). Actualizar o crear persona en `personas/`. Registrar en Research_Log.md.
+5. **Guardar**: Transcripción en `fuentes/transcripciones/` (formato en `references/vault-output-format.md`). Registrar en Research_Log.md.
 
 ## Output Contract
 
@@ -72,7 +71,7 @@ Para PDFs multi-página: extraer cada página como imagen independiente y proces
 ## Procesamiento de Imágenes
 
 ### Imágenes Procesadas
-| Imagen | Tipo | Método | Entidades | Estado |
+| Imagen | Tipo | Método | Entidades | Confianza | Estado |
 |--------|------|--------|-----------|--------|
 
 ### Resumen
@@ -89,6 +88,5 @@ Para PDFs multi-página: extraer cada página como imagen independiente y proces
 - `references/ocr-prompts/bautismo.md` — Extracción estructurada para partidas de bautismo
 - `references/ocr-prompts/matrimonio.md` — Extracción estructurada para actas de matrimonio
 - `references/ocr-prompts/defuncion.md` — Extracción estructurada para actas de defunción
-- `references/entity-patterns.md` — Validación de coherencia, cruce con vault y evaluación de confianza
+- `references/entity-patterns.md` — Validación de coherencia interna y evaluación de confianza
 - `references/vault-output-format.md` — Formato de salida al vault
-- `../genai/references/vault-conventions.md` — Convenciones generales del vault

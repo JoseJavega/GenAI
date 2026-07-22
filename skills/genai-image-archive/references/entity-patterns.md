@@ -65,7 +65,7 @@ Cuando extraes un nombre, búscalo en el vault existente:
 | Situación | Acción |
 |-----------|--------|
 | Persona existe + fechas coinciden | Usar `evidence_tier: strong`, añadir fuente a `sources` |
-| Persona existe + fechas NO coinciden | NO modificar. Registrar en Research_Log.md como discrepancia |
+| Persona existe + fechas NO coinciden | NO modificar. Registrar en Conflict_Log.md como discrepancia |
 | Persona existe + fecha nueva (campo que faltaba) | Añadir campo con fuente, mantener `evidence_tier` existente |
 | Persona NO existe | Crear nueva ficha con `evidence_tier` según calidad OCR |
 
@@ -198,33 +198,12 @@ YAML extraído del prompt
       │             │
       ▼             ▼
 ┌─────────────────────────────┐
-│ 2. Validar contra vault     │ ← Coincidencia de personas/fuentes
-└──────────┬──────────────────┘
-           │
-      ┌────┴────┐
-      │ Nueva   │ Existente
-      │ persona │     │
-      │    │    │     ▼
-      │    ▼    │ ┌────────────────┐
-      │ ┌─────┐ │ │ ¿Coinciden     │
-      │ │Crear│ │ │ fechas?        │
-      │ └─────┘ │ └──┬────────┬────┘
-      │    │    │  SÍ│        │NO
-      │    │    │    ▼        ▼
-      │    │    │ ┌────────┐ ┌─────────────┐
-      │    │    │ │Añadir  │ │Registrar    │
-      │    │    │ │fuente  │ │discrepancia │
-      │    │    │ └────────┘ └─────────────┘
-      │    │    │
-      ▼    ▼    ▼
-┌─────────────────────────────┐
-│ 3. Evaluar confianza final  │ ← evidence_tier
+│ 2. Evaluar confianza final  │ ← evidence_tier
 │    y asignar evidence_tier  │
 └──────────┬──────────────────┘
            │
            ▼
 ┌─────────────────────────────┐
-│ 4. Guardar transcripción    │
-│    y actualizar persona     │
+│ 3. Guardar transcripción    │
 └─────────────────────────────┘
 ```

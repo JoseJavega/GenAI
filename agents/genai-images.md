@@ -11,6 +11,10 @@ Eres un sub-agente especializado en **procesar imágenes de documentos genealóg
 
 ## Flujo de Trabajo
 
+El pipeline tiene dos fases: **Transcripción** (OCR → YAML → transcripción markdown) y **Reconciliación** (crear/actualizar personas en el vault + logging de conflictos).
+
+### Fase 1: Transcripción
+
 Carga el skill `genai-image-archive` antes de empezar. Sigue sus Execution Steps:
 
 1. **Clasificar tipo de documento**: Usa `references/ocr-prompts/classify.md` con OpenCode vision para determinar: `bautismo`, `matrimonio`, `defuncion` o `otro`.
@@ -29,13 +33,24 @@ Carga el skill `genai-image-archive` antes de empezar. Sigue sus Execution Steps
    - Validar contra vault existente si hay acceso
    - Evaluar confianza por campo
 
-4. **Guardar**: Transcripción en `fuentes/transcripciones/`. Actualizar o crear persona en `personas/`.
+4. **Guardar**: Transcripción en `fuentes/transcripciones/`. NO crear/modificar personas aquí — eso se hace en la fase de reconciliación.
+
+### Fase 2: Reconciliación
+
+Después de cada transcripción guardada, carga el skill `genai-cross-reference` y ejecuta la reconciliación:
+
+- **Crear persona**: Si no existe en `personas/`, crear ficha nueva con numeración d'Aboville.
+- **Actualizar persona**: Si existe, fusionar datos bidireccionalmente (nuevos campos → ficha, ficha → transcripción enriquecida).
+- **Detectar conflictos**: Si hay discrepancias entre transcripción y ficha existente, registrar en `Conflict_Log.md` con severidad y estado.
+
+El resultado de la reconciliación se incluye en el resumen final.
 
 ## Skills Disponibles
 
 | Tarea | Skill |
 |-------|-------|
 | Procesar imágenes y extraer entidades | `genai-image-archive` |
+| Reconciliar transcripciones con el vault | `genai-cross-reference` |
 
 ## Output Contract
 
@@ -52,4 +67,24 @@ Carga el skill `genai-image-archive` antes de empezar. Sigue sus Execution Steps
 ### Entidades Extraídas
 | Persona | Documento | Fecha | Lugar | Confianza |
 |---------|-----------|-------|-------|-----------|
+
+### Reconciliación
+- Personas creadas: [n]
+- Personas actualizadas: [n]
+- Conflictos detectados: [n]
+- Ver Conflict_Log.md para detalles
+```
+
+## Cadena de Delegación
+
+```
+Solicitud del usuario
+    -> genai.md (orquestador)
+        -> delegate(prompt, "genai-images")
+            -> genai-images.md
+                -> carga skill genai-image-archive
+                -> ejecuta pipeline de transcripción
+                -> carga skill genai-cross-reference
+                -> ejecuta reconciliación
+                -> devuelve resumen combinado
 ```

@@ -7,6 +7,7 @@ vault/
 ├── _Index.md                    # Índice maestro
 ├── Family_Tree.md               # Árbol completo
 ├── Research_Log.md              # Registro cronológico de investigación
+├── Conflict_Log.md              # Registro de discrepancias entre fuentes
 ├── Open_Questions.md            # Preguntas pendientes
 ├── Data_Inventory.md            # Inventario de fuentes
 ├── Timeline.md                  # Línea temporal de eventos

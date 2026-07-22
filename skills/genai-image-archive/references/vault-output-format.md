@@ -16,8 +16,6 @@ document_type: "bautismo"          # bautismo | matrimonio | defunción | otro
 ocr_method: "opencode-vision"      # opencode-vision | manual
 ocr_confidence: 0.95               # 0.0 - 1.0
 ocr_quality: "good"                # good | fair | poor
-person: "001_Nombre_Apellido"      # Nombre del archivo en personas/
-sosa: 1                            # Número Sosa (si aplica)
 place: "Madrid"
 date: "1920-03-15"
 ---
@@ -72,31 +70,6 @@ date: "1920-03-15"
 - Fecha confirmada por patrón de escritura
 ```
 
-## Formato de Archivo de Persona (actualización)
-
-Cuando se procesa un documento, se actualiza el archivo de persona correspondiente:
-
-```yaml
----
-type: person
-cr_type: person
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-tags: [genealogy, person]
-name: "José García López"
-sosa: 001
-born: "1920-03-15"
-birth_place: "Madrid"
-life_status: "deceased"
-family: "García"
-evidence_tier: "strong"
-profile_status: "complete"
-sources:
-  - "fuentes/transcripciones/bautismo_1920.md"
-  - "fuentes/certificados/bautismo_1920.pdf"
----
-```
-
 ## Convenciones de Nombre de Archivo
 
 ### Transcripciones
@@ -124,25 +97,6 @@ fuentes/certificados/{tipo}_{año}.{ext}
 | matrimonio | `matrimonio_1945.jpg` |
 | defunción | `defuncion_1980.tiff` |
 
-## Reglas de Vinculación
-
-### Persona ↔ Fuente
-
-Cada transcripción en `fuentes/transcripciones/` DEBE incluir:
-
-```yaml
-person: "001_Nombre_Apellido"    # Nombre exacto del archivo en personas/
-sosa: 1                          # Número Sosa
-source_file: "fuentes/certificados/bautismo_1920.pdf"
-```
-
-### Wikilinks en transcripciones
-
-```markdown
-Ver también: [[004_Abuelo_Paterno]], [[006_Abuela_Materna]]
- Padres: [[002_Padre]] y [[003_Madre]]
-```
-
 ## Calidad de OCR
 
 ### Campos de calidad
@@ -168,8 +122,7 @@ Ver también: [[004_Abuelo_Paterno]], [[006_Abuela_Materna]]
 1. Ejecutar OCR en imagen (OpenCode vision)
 2. Guardar imagen original en fuentes/certificados/
 3. Crear transcripción en fuentes/transcripciones/
-4. Actualizar archivo de persona en personas/
-5. Añadir referencia a Research_Log.md
+4. Añadir referencia a Research_Log.md
 ```
 
 ### Research_Log.md
@@ -186,5 +139,4 @@ Añadir entrada al registro de investigación:
 - **Archivos**:
   - Original: `fuentes/certificados/bautismo_1920.pdf`
   - Transcripción: `fuentes/transcripciones/bautismo_1920.md`
-  - Persona: `personas/001_José_García_López.md`
 ```
