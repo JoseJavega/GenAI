@@ -101,12 +101,12 @@ Cada persona recibe un número compuesto por:
 - **Sosa** (3 dígitos): posición en línea directa ascendente
 - **d'Aboville** (2 dígitos): orden de nacimiento entre hermanos
 
-**Formato del archivo**: `SSS-HH_Nombre_Apellido.md`
+**Formato del archivo**: `SSS-HH_Nombre_Apellido1_Apellido2.md`
 **Ubicación**: Dentro del directorio `personas/`
 
 | Tipo | Ejemplo | Ubicación completa |
 |------|---------|-------------------|
-| De cujus | `001_Nombre.md` | `personas/001_Nombre.md` |
+| De cujus | `001_Nombre_Apellido1_Apellido2.md` | `personas/001_Nombre_Apellido1_Apellido2.md` |
 | Padre | `002_Padre.md` | `personas/002_Padre.md` |
 | Madre | `003_Madre.md` | `personas/003_Madre.md` |
 | Abuelo paterno | `004_Abuelo.md` | `personas/004_Abuelo.md` |
@@ -119,21 +119,25 @@ Cada persona recibe un número compuesto por:
 - Separador Sosa-d'Aboville: guión (`-`)
 - Separador generaciones d'Aboville: punto (`.`)
 - Sin espacios: usar guiones bajos (`_`) en nombre y apellido
+- Incluir TODOS los apellidos conocidos en el nombre del archivo
+  - Si solo hay 1 apellido: `SSS-HH_Nombre_Apellido1.md`
+  - Si hay 2 apellidos: `SSS-HH_Nombre_Apellido1_Apellido2.md`
+  - Nombres compuestos: separar cada palabra con `_` (ej: `María_de_los_Ángeles`)
 - Todos los archivos van en `personas/`, no crear subdirectorios por persona
 
 **Ejemplos**:
 ```
 personas/
-├── 001_Luis_Jávega.md              # De cujus
-├── 002_Padre_de_Luis.md            # Padre (Sosa 2)
-├── 003_Madre_de_Luis.md            # Madre (Sosa 3)
-├── 004_Abuelo_Paterno.md           # Abuelo paterno (Sosa 4)
-├── 004-01_Tío_Paterno.md           # Tío paterno (hermano del abuelo 4)
-├── 004-01.02_Primo_Paterno.md      # Primo paterno (hijo del tío 4-01)
-├── 005_Abuela_Paterna.md           # Abuela paterna (Sosa 5)
-├── 006_Abuelo_Materno.md           # Abuelo materno (Sosa 6)
-├── 006-01_Tío_Materno.md           # Tío materno (hermano del abuelo 6)
-└── 006-01.01_Primo_Materno.md      # Primo materno (hijo del tío 6-01)
+├── 001_Luis_Jávega_García.md        # De cujus (con ambos apellidos)
+├── 002_Padre_de_Luis.md             # Padre (Sosa 2, descriptor)
+├── 003_Madre_de_Luis.md             # Madre (Sosa 3, descriptor)
+├── 004_Antonio_Jávega_López.md      # Abuelo paterno (Sosa 4, nombre real)
+├── 004-01_Tío_Paterno.md            # Tío paterno (descriptor)
+├── 004-01.02_Primo_Paterno.md       # Primo paterno (descriptor)
+├── 005_María_García_Ruiz.md         # Abuela paterna (Sosa 5, nombre real)
+├── 006_Abuelo_Materno.md            # Abuelo materno (Sosa 6, descriptor)
+├── 006-01_Tío_Materno.md            # Tío materno (descriptor)
+└── 006-01.01_Primo_Materno.md       # Primo materno (descriptor)
 ```
 
 ## Wikilinks

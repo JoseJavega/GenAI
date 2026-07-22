@@ -57,33 +57,34 @@ tags: [genealogy, family-history]
 
 ### Convención de Nombres (Sosa-d'Aboville)
 
-Las fichas de personas se almacenan en `personas/`. Cada archivo sigue el formato: `SSS-HH_Nombre_Apellido.md`
+Las fichas de personas se almacenan en `personas/`. Cada archivo sigue el formato: `SSS-HH_Nombre_Apellido1_Apellido2.md`
 
-| Sosa | d'Aboville | Nombre | Relación |
-|------|------------|--------|----------|
-| 001 | - | Luis Jávega | Yo (de cujus) |
-| 002 | - | Padre de Luis | Padre |
-| 003 | - | Madre de Luis | Madre |
-| 004 | - | Abuelo paterno | Abuelo paterno |
-| 004 | 01 | Tío paterno | Hermano del abuelo 4 |
-| 004 | 01.02 | Primo paterno | Hijo del tío 4-01 |
-| 005 | - | Abuela paterna | Abuela paterna |
-| 006 | - | Abuelo materno | Abuelo materno |
-| 006 | 01 | Tío materno | Hermano del abuelo 6 |
+| Sosa | d'Aboville | Nombre | Apellido(s) | Relación |
+|------|------------|--------|-------------|----------|
+| 001 | - | Luis | Jávega García | Yo (de cujus) |
+| 002 | - | Padre de Luis | - | Padre |
+| 003 | - | Madre de Luis | - | Madre |
+| 004 | - | Antonio | Jávega López | Abuelo paterno |
+| 004 | 01 | Tío paterno | - | Hermano del abuelo 4 |
+| 004 | 01.02 | Primo paterno | - | Hijo del tío 4-01 |
+| 005 | - | María | García Ruiz | Abuela paterna |
+| 006 | - | Abuelo materno | - | Abuelo materno |
+| 006 | 01 | Tío materno | - | Hermano del abuelo 6 |
 
 ### Ejemplo de Estructura
 
 ```
 personas/
-├── 001_Luis_Jávega.md
-├── 002_Padre_de_Luis.md
-├── 003_Madre_de_Luis.md
-├── 004_Abuelo_Paterno.md
-├── 004-01_Tío_Paterno.md
-├── 004-01.02_Primo_Paterno.md
-├── 005_Abuela_Paterna.md
-├── 006_Abuelo_Materno.md
-└── 006-01_Tío_Materno.md
+├── 001_Luis_Jávega_García.md        # De cujus (con ambos apellidos)
+├── 002_Padre_de_Luis.md             # Padre (Sosa 2, descriptor)
+├── 003_Madre_de_Luis.md             # Madre (Sosa 3, descriptor)
+├── 004_Antonio_Jávega_López.md      # Abuelo paterno (Sosa 4, nombre real)
+├── 004-01_Tío_Paterno.md            # Tío paterno (descriptor)
+├── 004-01.02_Primo_Paterno.md       # Primo paterno (descriptor)
+├── 005_María_García_Ruiz.md         # Abuela paterna (Sosa 5, nombre real)
+├── 006_Abuelo_Materno.md            # Abuelo materno (Sosa 6, descriptor)
+├── 006-01_Tío_Materno.md            # Tío materno (descriptor)
+└── 006-01.01_Primo_Materno.md       # Primo materno (descriptor)
 ```
 
 ## Fuentes Documentales
